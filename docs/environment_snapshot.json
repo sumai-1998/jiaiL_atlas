@@ -1,0 +1,56 @@
+{
+  "date": "2026-09-14",
+  "note": "Installed versions on the original Linux RTX A6000 host; not a cross-platform lockfile.",
+  "environments": {
+    "worldwarp": {
+      "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+      "packages": {
+        "torch": "2.7.1+cu126",
+        "torchvision": "0.22.1+cu126",
+        "torchaudio": "2.7.1+cu126",
+        "numpy": "1.26.4",
+        "diffusers": "0.35.1",
+        "transformers": "4.56.1",
+        "accelerate": "1.11.0",
+        "flash-attn": "2.8.3.post1",
+        "pytorch3d": "0.7.9",
+        "gsplat": "1.5.3",
+        "open3d": "0.19.0",
+        "omegaconf": "2.3.0",
+        "pillow": "11.3.0",
+        "opencv-python": "4.11.0.86",
+        "imageio": "2.37.0",
+        "imageio-ffmpeg": "0.6.0"
+      }
+    },
+    "mapanything": {
+      "python": "3.12.14 (main, Sep  2 2026, 23:27:36) [GCC 15.3.0]",
+      "packages": {
+        "torch": "2.5.1+cu124",
+        "torchvision": "0.20.1+cu124",
+        "torchaudio": "2.5.1+cu124",
+        "numpy": "2.2.6",
+        "gsplat": "1.5.3",
+        "open3d": "0.19.0",
+        "rerun-sdk": "0.24.1",
+        "omegaconf": "2.3.1",
+        "uniception": "0.1.7",
+        "mapanything": "1.1.4",
+        "pillow": "11.3.0",
+        "opencv-python-headless": "4.10.0.84"
+      }
+    },
+    "game": {
+      "python": "3.10.21 | packaged by conda-forge | (main, Aug 21 2026, 22:42:31) [GCC 14.4.0]",
+      "packages": {
+        "torch": "2.5.1+cu124",
+        "torchvision": "0.20.1+cu124",
+        "torchaudio": "2.5.1+cu124",
+        "numpy": "1.26.4",
+        "open3d": "0.19.0",
+        "pillow": "12.3.0",
+        "opencv-python": "4.10.0.84"
+      }
+    }
+  }
+}

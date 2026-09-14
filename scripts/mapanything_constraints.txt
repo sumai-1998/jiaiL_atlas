@@ -1,0 +1,7 @@
+torch==2.5.1
+torchvision==0.20.1
+torchaudio==2.5.1
+numpy==2.2.6
+opencv-python==4.10.0.84
+opencv-python-headless==4.10.0.84
+setuptools<81

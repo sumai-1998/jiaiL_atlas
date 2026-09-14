@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="2048" height="2420" viewBox="0 0 2048 2420" role="img" aria-labelledby="title desc" xml:lang="zh-CN">
+<title id="title">Atlas-like 开源替代路线与部件映射（2026-09-06 校准版）</title>
+<desc id="desc">完整系统 WorldWarp、HY-World 2.0 与 PixWorld/SpatialGen 独立模型路线并列展示。功能卡片分别映射相机几何、生成、记忆、3D重建、动态重构、源视频重渲染、物理仿真及交付训练工具。底部虚线为尚未实现的持久状态闭环。</desc>
+<defs>
+<marker id="a-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#3268BE"/></marker>
+<marker id="a-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#087F74"/></marker>
+<marker id="a-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#9E651B"/></marker>
+<marker id="a-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#7555AA"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK SC','Microsoft YaHei','PingFang SC',sans-serif">
+<rect x="0" y="0" width="2048" height="2420" rx="0" fill="#F5F8FC" stroke="#F5F8FC" stroke-width="1.5"/>
+<path d="M64 58 H104" fill="none" stroke="#087F74" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="122" y="65" font-size="17" fill="#087F74" font-weight="700" data-max-width="1400" letter-spacing="2">02 / EVIDENCE-CALIBRATED</text>
+<text x="1984" y="65" font-size="17" fill="#52677D" font-weight="500" data-max-width="360" text-anchor="end">2026.09.06 · REV 2</text>
+<text x="64" y="124" font-size="46" fill="#142C45" font-weight="700" data-max-width="1920" >Atlas-like：开源替代路线与部件映射</text>
+<text x="64" y="169" font-size="22" fill="#52677D" font-weight="400" data-max-width="1920" >先区分整套系统，再按功能选择部件；功能相似不代表接口兼容。项目名称可点击打开 GitHub。</text>
+<rect x="64" y="198" width="1920" height="54" rx="18" fill="#FFFFFF" stroke="#D6E1EC" stroke-width="1.5"/>
+<rect x="86" y="211" width="146" height="28" rx="7" fill="#E9F7F3" stroke="#E9F7F3" stroke-width="1.5"/><text x="159" y="231" font-size="14" fill="#087F74" font-weight="700" data-max-width="132" text-anchor="middle">已核查本地产物</text>
+<text x="250" y="233" font-size="19" fill="#52677D" font-weight="400" data-max-width="400" >仅 WorldWarp 单片段</text>
+<rect x="666" y="211" width="146" height="28" rx="7" fill="#EAF2FF" stroke="#EAF2FF" stroke-width="1.5"/><text x="739" y="231" font-size="14" fill="#3268BE" font-weight="700" data-max-width="132" text-anchor="middle">公开候选 / 待接入</text>
+<text x="831" y="233" font-size="19" fill="#52677D" font-weight="400" data-max-width="440" >其余未在本机完成接入验收</text>
+<rect x="1310" y="211" width="128" height="28" rx="7" fill="#FFF5E5" stroke="#FFF5E5" stroke-width="1.5"/><text x="1374" y="231" font-size="14" fill="#9E651B" font-weight="700" data-max-width="114" text-anchor="middle">自行实现 / 适配</text>
+<text x="1456" y="233" font-size="19" fill="#52677D" font-weight="400" data-max-width="480" >不是现成可插拔模块</text>
+<rect x="64" y="284" width="616" height="284" rx="20" fill="#FFFFFF" stroke="#D6E1EC" stroke-width="1.5"/>
+<rect x="716" y="284" width="616" height="284" rx="20" fill="#FFFFFF" stroke="#D6E1EC" stroke-width="1.5"/>
+<rect x="1368" y="284" width="616" height="284" rx="20" fill="#FFFFFF" stroke="#D6E1EC" stroke-width="1.5"/>
+<rect x="88" y="304" width="126" height="28" rx="7" fill="#E9F7F3" stroke="#E9F7F3" stroke-width="1.5"/><text x="151" y="324" font-size="14" fill="#087F74" font-weight="700" data-max-width="112" text-anchor="middle">A · 本地基线</text>
+<a href="https://github.com/HyoKong/WorldWarp" xlink:href="https://github.com/HyoKong/WorldWarp" target="_blank" rel="noopener noreferrer"><title>https://github.com/HyoKong/WorldWarp</title><text x="234" y="328" font-size="30" fill="#3268BE" font-weight="600" data-max-width="418" >WorldWarp ↗</text></a>
+<text x="88" y="376" font-size="24" fill="#142C45" font-weight="600" data-max-width="568" >当前片段 → TTT3R → 本片段 GS</text>
+<text x="88" y="417" font-size="22" fill="#52677D" font-weight="500" data-max-width="568" >目标 RGB / mask → Wan2.1 → 新片段</text>
+<text x="88" y="461" font-size="22" fill="#087F74" font-weight="600" data-max-width="568" >已核查：81 帧视频 / 50,000 Gaussian</text>
+<text x="88" y="505" font-size="21" fill="#9E651B" font-weight="600" data-max-width="568" >每片段重新初始化；不等于持久全局 GS</text>
+<text x="88" y="543" font-size="19" fill="#52677D" font-weight="400" data-max-width="568" >保留为基线；跨片段质量与回访尚待测试。</text>
+<rect x="740" y="304" width="126" height="28" rx="7" fill="#EAF2FF" stroke="#EAF2FF" stroke-width="1.5"/><text x="803" y="324" font-size="14" fill="#3268BE" font-weight="700" data-max-width="112" text-anchor="middle">B · 整链路对照</text>
+<a href="https://github.com/Tencent-Hunyuan/HY-World-2.0" xlink:href="https://github.com/Tencent-Hunyuan/HY-World-2.0" target="_blank" rel="noopener noreferrer"><title>https://github.com/Tencent-Hunyuan/HY-World-2.0</title><text x="886" y="328" font-size="29" fill="#3268BE" font-weight="600" data-max-width="422" >HY-World 2.0 ↗</text></a>
+<a href="https://github.com/Tencent-Hunyuan/HY-World-2.0/tree/main/hyworld2/panogen" xlink:href="https://github.com/Tencent-Hunyuan/HY-World-2.0/tree/main/hyworld2/panogen" target="_blank" rel="noopener noreferrer"><title>https://github.com/Tencent-Hunyuan/HY-World-2.0/tree/main/hyworld2/panogen</title><text x="740" y="376" font-size="23" fill="#3268BE" font-weight="600" data-max-width="174" >HY-Pano ↗</text></a>
+<text x="923" y="376" font-size="22" fill="#142C45" font-weight="600" data-max-width="385" >→ WorldNav → WorldStereo</text>
+<text x="740" y="417" font-size="23" fill="#52677D" font-weight="500" data-max-width="568" >→ WorldMirror + GS 优化 → 3D 资产</text>
+<text x="740" y="461" font-size="22" fill="#3268BE" font-weight="600" data-max-width="568" >整套静态世界系统，不是一个输出头</text>
+<text x="740" y="505" font-size="21" fill="#9E651B" font-weight="600" data-max-width="568" >WorldGen 建议 ≥4 GPU，另需 VLM 服务</text>
+<text x="740" y="543" font-size="19" fill="#52677D" font-weight="400" data-max-width="568" >适合工程对照；代码 / 权重条款单独核查。</text>
+<rect x="1392" y="304" width="166" height="28" rx="7" fill="#F2EDFA" stroke="#F2EDFA" stroke-width="1.5"/><text x="1475" y="324" font-size="14" fill="#7555AA" font-weight="700" data-max-width="152" text-anchor="middle">C · 独立模型路线</text>
+<text x="1578" y="328" font-size="24" fill="#142C45" font-weight="700" data-max-width="382" >与 A / B 并列</text>
+<a href="https://github.com/SensenGao/PixWorld" xlink:href="https://github.com/SensenGao/PixWorld" target="_blank" rel="noopener noreferrer"><title>https://github.com/SensenGao/PixWorld</title><text x="1392" y="380" font-size="27" fill="#3268BE" font-weight="600" data-max-width="260" >PixWorld ↗</text></a>
+<text x="1658" y="380" font-size="21" fill="#52677D" font-weight="500" data-max-width="302" >像素空间生成 + GS</text>
+<text x="1392" y="416" font-size="21" fill="#9E651B" font-weight="500" data-max-width="568" >公开 Wan 衍生 5B ≠ 论文从零训练模型</text>
+<a href="https://github.com/manycore-research/SpatialGen" xlink:href="https://github.com/manycore-research/SpatialGen" target="_blank" rel="noopener noreferrer"><title>https://github.com/manycore-research/SpatialGen</title><text x="1392" y="466" font-size="27" fill="#3268BE" font-weight="600" data-max-width="260" >SpatialGen ↗</text></a>
+<text x="1658" y="466" font-size="21" fill="#52677D" font-weight="500" data-max-width="302" >布局条件室内生成</text>
+<text x="1392" y="504" font-size="21" fill="#7555AA" font-weight="600" data-max-width="568" >不是挂在 WorldWarp / SCoPE 后的后处理</text>
+<text x="1392" y="543" font-size="19" fill="#52677D" font-weight="400" data-max-width="568" >二者分别评估；不互相串联，不等价于 Atlas。</text>
+<text x="64" y="618" font-size="29" fill="#142C45" font-weight="700" data-max-width="1300" >功能槽位 · 与图 1 的 F / R / E 对应</text>
+<text x="64" y="654" font-size="21" fill="#52677D" font-weight="400" data-max-width="1920" >下列卡片是替代关系，不是纵向或横向的必经流水线；每个槽位可选择不同实现。</text>
+<rect x="64" y="686" width="936" height="234" rx="18" fill="#FFFFFF" stroke="#D6E1EC" stroke-width="1.5"/><rect x="64" y="686" width="5" height="234" rx="2" fill="#3268BE" stroke="#3268BE" stroke-width="1.5"/><rect x="86" y="707" width="48" height="28" rx="7" fill="#EAF2FF" stroke="#EAF2FF" stroke-width="1.5"/><text x="110" y="727" font-size="14" fill="#3268BE" font-weight="700" data-max-width="34" text-anchor="middle">F2</text><text x="148" y="730" font-size="25" fill="#142C45" font-weight="700" data-max-width="828" >相机 / 几何前端 · F1–F2</text>
+<a href="https://github.com/Brack-Wang/raymap3r" xlink:href="https://github.com/Brack-Wang/raymap3r" target="_blank" rel="noopener noreferrer"><title>https://github.com/Brack-Wang/raymap3r</title><text x="88" y="783" font-size="24" fill="#3268BE" font-weight="600" data-max-width="272" >RayMap3R ↗</text></a>
+<text x="386" y="783" font-size="22" fill="#52677D" font-weight="400" data-max-width="588" >流式几何与静态性门控；重置对齐 ≠ 全局回环</text>
+<a href="https://github.com/yyfz/Pi3" xlink:href="https://github.com/yyfz/Pi3" target="_blank" rel="noopener noreferrer"><title>https://github.com/yyfz/Pi3</title><text x="88" y="825" font-size="24" fill="#3268BE" font-weight="600" data-max-width="272" >Pi3X ↗</text></a>
+<text x="386" y="825" font-size="22" fill="#52677D" font-weight="400" data-max-width="588" >图像与可用 K / T 条件 → 点图；权重非商用</text>
+<a href="https://github.com/nv-tlabs/vipe" xlink:href="https://github.com/nv-tlabs/vipe" target="_blank" rel="noopener noreferrer"><title>https://github.com/nv-tlabs/vipe</title><text x="88" y="867" font-size="24" fill="#3268BE" font-weight="600" data-max-width="272" >ViPE ↗</text></a>
+<text x="386" y="867" font-size="22" fill="#52677D" font-weight="400" data-max-width="588" >真实视频几何预处理 / 训练数据标注</text>
+<text x="88" y="902" font-size="19" fill="#9E651B" font-weight="500" data-max-width="888" >统一相机 convention、尺度、depth 定义；不用把这三个前端全串起来。</text>
+<rect x="1048" y="686" width="936" height="234" rx="18" fill="#FFFFFF" stroke="#D6E1EC" stroke-width="1.5"/><rect x="1048" y="686" width="5" height="234" rx="2" fill="#3268BE" stroke="#3268BE" stroke-width="1.5"/><rect x="1070" y="707" width="48" height="28" rx="7" fill="#EAF2FF" stroke="#EAF2FF" stroke-width="1.5"/><text x="1094" y="727" font-size="14" fill="#3268BE" font-weight="700" data-max-width="34" text-anchor="middle">F5</text><text x="1132" y="730" font-size="25" fill="#142C45" font-weight="700" data-max-width="828" >模态编码与相机生成 · F3–F5</text>
+<a href="https://github.com/Wan-Video/Wan2.2" xlink:href="https://github.com/Wan-Video/Wan2.2" target="_blank" rel="noopener noreferrer"><title>https://github.com/Wan-Video/Wan2.2</title><text x="1072" y="783" font-size="24" fill="#3268BE" font-weight="600" data-max-width="272" >Wan2.2 ↗</text></a>
+<text x="1370" y="783" font-size="22" fill="#52677D" font-weight="400" data-max-width="588" >VAE / DiT 基础；不自带 Atlas 的空间序列协议</text>
+<a href="https://github.com/Stability-AI/stable-virtual-camera" xlink:href="https://github.com/Stability-AI/stable-virtual-camera" target="_blank" rel="noopener noreferrer"><title>https://github.com/Stability-AI/stable-virtual-camera</title><text x="1072" y="825" font-size="24" fill="#3268BE" font-weight="600" data-max-width="272" >SEVA ↗</text></a>
+<text x="1370" y="825" font-size="22" fill="#52677D" font-weight="400" data-max-width="588" >少视图 + 数值相机 → NVS；非商用约束</text>
+<a href="https://github.com/TencentARC/SCoPE" xlink:href="https://github.com/TencentARC/SCoPE" target="_blank" rel="noopener noreferrer"><title>https://github.com/TencentARC/SCoPE</title><text x="1072" y="867" font-size="24" fill="#3268BE" font-weight="600" data-max-width="272" >SCoPE ↗</text></a>
+<text x="1370" y="867" font-size="22" fill="#52677D" font-weight="400" data-max-width="588" >首帧 + 文本 + 相机 → 视频；Wan2.2 A14B</text>
+<text x="1072" y="902" font-size="19" fill="#9E651B" font-weight="500" data-max-width="888" >选定整套模型后做 adapter；不要假定它们共用 latent 或相机编码。</text>
+<rect x="64" y="948" width="936" height="254" rx="18" fill="#FFFFFF" stroke="#9E651B" stroke-width="1.5" stroke-dasharray="8 6"/><rect x="64" y="948" width="5" height="254" rx="2" fill="#9E651B" stroke="#9E651B" stroke-width="1.5"/><rect x="86" y="969" width="48" height="28" rx="7" fill="#FFF5E5" stroke="#FFF5E5" stroke-width="1.5"/><text x="110" y="989" font-size="14" fill="#9E651B" font-weight="700" data-max-width="34" text-anchor="middle">E1</text><text x="148" y="992" font-size="25" fill="#142C45" font-weight="700" data-max-width="828" >持久记忆 / 空间上下文 · E1 / F4</text>
+<a href="https://github.com/xizaoqu/WorldMem" xlink:href="https://github.com/xizaoqu/WorldMem" target="_blank" rel="noopener noreferrer"><title>https://github.com/xizaoqu/WorldMem</title><text x="88" y="1040" font-size="24" fill="#3268BE" font-weight="600" data-max-width="272" >WorldMem ↗</text></a>
+<text x="386" y="1040" font-size="22" fill="#52677D" font-weight="400" data-max-width="588" >长期观测记忆的模型机制参考</text>
+<a href="https://github.com/Tencent-Hunyuan/HY-World-2.0/tree/main/hyworld2/worldgen" xlink:href="https://github.com/Tencent-Hunyuan/HY-World-2.0/tree/main/hyworld2/worldgen" target="_blank" rel="noopener noreferrer"><title>https://github.com/Tencent-Hunyuan/HY-World-2.0/tree/main/hyworld2/worldgen</title><text x="88" y="1084" font-size="24" fill="#3268BE" font-weight="600" data-max-width="272" >HY 全景记忆库 ↗</text></a>
+<text x="386" y="1084" font-size="22" fill="#52677D" font-weight="400" data-max-width="588" >系统内的记忆组织 / 检索参考</text>
+<text x="88" y="1130" font-size="21" fill="#142C45" font-weight="600" data-max-width="888" >需要自行实现：session 级 GS、关键帧检索、位姿修正与来源记录。</text>
+<text x="88" y="1168" font-size="20" fill="#9E651B" font-weight="500" data-max-width="888" >模型上下文状态与显式地图分开管理；WorldMem 不是通用 memory SDK。</text>
+<rect x="1048" y="948" width="936" height="254" rx="18" fill="#FFFFFF" stroke="#D6E1EC" stroke-width="1.5"/><rect x="1048" y="948" width="5" height="254" rx="2" fill="#3268BE" stroke="#3268BE" stroke-width="1.5"/><rect x="1070" y="969" width="48" height="28" rx="7" fill="#EAF2FF" stroke="#EAF2FF" stroke-width="1.5"/><text x="1094" y="989" font-size="14" fill="#3268BE" font-weight="700" data-max-width="34" text-anchor="middle">R2</text><text x="1132" y="992" font-size="25" fill="#142C45" font-weight="700" data-max-width="828" >显式 3D 构建 / 重建器对照</text>
+<a href="https://github.com/mlvlab/F4Splat" xlink:href="https://github.com/mlvlab/F4Splat" target="_blank" rel="noopener noreferrer"><title>https://github.com/mlvlab/F4Splat</title><text x="1072" y="1040" font-size="24" fill="#3268BE" font-weight="600" data-max-width="272" >F4Splat ↗</text></a>
+<text x="1370" y="1040" font-size="22" fill="#52677D" font-weight="400" data-max-width="588" >少视图 GS 预测；按所选 checkpoint 验证</text>
+<a href="https://github.com/cvg/resplat" xlink:href="https://github.com/cvg/resplat" target="_blank" rel="noopener noreferrer"><title>https://github.com/cvg/resplat</title><text x="1072" y="1084" font-size="24" fill="#3268BE" font-weight="600" data-max-width="272" >ReSplat ↗</text></a>
+<text x="1370" y="1084" font-size="22" fill="#52677D" font-weight="400" data-max-width="588" >自带初始化、特征状态和渲染误差循环</text>
+<a href="https://github.com/nerfstudio-project/gsplat" xlink:href="https://github.com/nerfstudio-project/gsplat" target="_blank" rel="noopener noreferrer"><title>https://github.com/nerfstudio-project/gsplat</title><text x="1072" y="1128" font-size="24" fill="#3268BE" font-weight="600" data-max-width="272" >gsplat ↗</text></a>
+<text x="1370" y="1128" font-size="22" fill="#52677D" font-weight="400" data-max-width="588" >可复用的可微渲染 / 优化工具层</text>
+<text x="1072" y="1168" font-size="20" fill="#9E651B" font-weight="500" data-max-width="888" >ReSplat 不是任意外部 GS 的通用 refine API；先比独立重建结果。</text>
+<rect x="64" y="1230" width="936" height="254" rx="18" fill="#FFFFFF" stroke="#D6E1EC" stroke-width="1.5"/><rect x="64" y="1230" width="5" height="254" rx="2" fill="#7555AA" stroke="#7555AA" stroke-width="1.5"/><rect x="86" y="1251" width="48" height="28" rx="7" fill="#F2EDFA" stroke="#F2EDFA" stroke-width="1.5"/><text x="110" y="1271" font-size="14" fill="#7555AA" font-weight="700" data-max-width="34" text-anchor="middle">R3</text><text x="148" y="1274" font-size="25" fill="#142C45" font-weight="700" data-max-width="828" >真实动态重构 · 与生成、物理分开</text>
+<a href="https://github.com/bralani/NoPo4D" xlink:href="https://github.com/bralani/NoPo4D" target="_blank" rel="noopener noreferrer"><title>https://github.com/bralani/NoPo4D</title><text x="88" y="1322" font-size="24" fill="#3268BE" font-weight="600" data-max-width="272" >NoPo4D ↗</text></a>
+<text x="386" y="1322" font-size="22" fill="#52677D" font-weight="400" data-max-width="588" >前馈动态 GS；默认跨时间平均每台相机位姿</text>
+<a href="https://github.com/liangjie1999/ClipGStream" xlink:href="https://github.com/liangjie1999/ClipGStream" target="_blank" rel="noopener noreferrer"><title>https://github.com/liangjie1999/ClipGStream</title><text x="88" y="1366" font-size="24" fill="#3268BE" font-weight="600" data-max-width="272" >ClipGStream ↗</text></a>
+<text x="386" y="1366" font-size="22" fill="#52677D" font-weight="400" data-max-width="588" >同步多视角长序列；按片段进行场景优化</text>
+<a href="https://github.com/TencentARC/Track4World" xlink:href="https://github.com/TencentARC/Track4World" target="_blank" rel="noopener noreferrer"><title>https://github.com/TencentARC/Track4World</title><text x="88" y="1410" font-size="24" fill="#3268BE" font-weight="600" data-max-width="272" >Track4World ↗</text></a>
+<text x="386" y="1410" font-size="22" fill="#52677D" font-weight="400" data-max-width="588" >稠密世界坐标跟踪；辅助运动关联</text>
+<text x="88" y="1450" font-size="20" fill="#9E651B" font-weight="500" data-max-width="888" >先验收同步固定机位；NoPo4D 的相机文档与代码差异必须单测。</text>
+<rect x="1048" y="1230" width="936" height="254" rx="18" fill="#FFFFFF" stroke="#D6E1EC" stroke-width="1.5"/><rect x="1048" y="1230" width="5" height="254" rx="2" fill="#7555AA" stroke="#7555AA" stroke-width="1.5"/><rect x="1070" y="1251" width="48" height="28" rx="7" fill="#F2EDFA" stroke="#F2EDFA" stroke-width="1.5"/><text x="1094" y="1271" font-size="14" fill="#7555AA" font-weight="700" data-max-width="34" text-anchor="middle">F5</text><text x="1132" y="1274" font-size="25" fill="#142C45" font-weight="700" data-max-width="828" >源视频重渲染 · 单独实验路线</text>
+<a href="https://github.com/FREDZEL2020/DepthDirector" xlink:href="https://github.com/FREDZEL2020/DepthDirector" target="_blank" rel="noopener noreferrer"><title>https://github.com/FREDZEL2020/DepthDirector</title><text x="1072" y="1322" font-size="27" fill="#3268BE" font-weight="600" data-max-width="400" >DepthDirector ↗</text></a>
+<text x="1072" y="1366" font-size="24" fill="#142C45" font-weight="600" data-max-width="888" >发布条件：input_image + depth_cond + concat_video</text>
+<text x="1072" y="1410" font-size="21" fill="#52677D" font-weight="400" data-max-width="888" >源视频内容 + 目标视角深度 → 新轨迹视频；不是只有首帧与深度。</text>
+<text x="1072" y="1450" font-size="20" fill="#9E651B" font-weight="500" data-max-width="888" >接入 GS depth 需适配 / 验证；不能原位替换 WorldWarp 的 RGB latent。</text>
+<rect x="64" y="1512" width="936" height="254" rx="18" fill="#FFFFFF" stroke="#D6E1EC" stroke-width="1.5"/><rect x="64" y="1512" width="5" height="254" rx="2" fill="#7555AA" stroke="#7555AA" stroke-width="1.5"/><rect x="86" y="1533" width="48" height="28" rx="7" fill="#F2EDFA" stroke="#F2EDFA" stroke-width="1.5"/><text x="110" y="1553" font-size="14" fill="#7555AA" font-weight="700" data-max-width="34" text-anchor="middle">E2</text><text x="148" y="1556" font-size="25" fill="#142C45" font-weight="700" data-max-width="828" >机器人与交互仿真 · R4 / E2</text>
+<a href="https://github.com/google-deepmind/mujoco" xlink:href="https://github.com/google-deepmind/mujoco" target="_blank" rel="noopener noreferrer"><title>https://github.com/google-deepmind/mujoco</title><text x="88" y="1604" font-size="24" fill="#3268BE" font-weight="600" data-max-width="272" >MuJoCo ↗</text></a>
+<text x="386" y="1604" font-size="22" fill="#52677D" font-weight="400" data-max-width="588" >刚体 / 关节 / 接触与机器人状态更新</text>
+<a href="https://github.com/Genesis-Embodied-AI/genesis-world" xlink:href="https://github.com/Genesis-Embodied-AI/genesis-world" target="_blank" rel="noopener noreferrer"><title>https://github.com/Genesis-Embodied-AI/genesis-world</title><text x="88" y="1648" font-size="24" fill="#3268BE" font-weight="600" data-max-width="272" >Genesis ↗</text></a>
+<text x="386" y="1648" font-size="22" fill="#52677D" font-weight="400" data-max-width="588" >可选的仿真平台路线</text>
+<text x="88" y="1692" font-size="21" fill="#142C45" font-weight="600" data-max-width="888" >先补碰撞几何、质量、摩擦和系统辨识；4DGS 不能直接提供这些。</text>
+<text x="88" y="1730" font-size="20" fill="#9E651B" font-weight="500" data-max-width="888" >仿真引擎 + 渲染器不等价于 Atlas 原生 RGB-D 观测模型。</text>
+<rect x="1048" y="1512" width="936" height="254" rx="18" fill="#FFFFFF" stroke="#D6E1EC" stroke-width="1.5"/><rect x="1048" y="1512" width="5" height="254" rx="2" fill="#3268BE" stroke="#3268BE" stroke-width="1.5"/><rect x="1070" y="1533" width="48" height="28" rx="7" fill="#EAF2FF" stroke="#EAF2FF" stroke-width="1.5"/><text x="1094" y="1553" font-size="14" fill="#3268BE" font-weight="700" data-max-width="34" text-anchor="middle">E3</text><text x="1132" y="1556" font-size="25" fill="#142C45" font-weight="700" data-max-width="828" >渲染交付与训练数据 · R2 / E3</text>
+<a href="https://github.com/sparkjsdev/spark" xlink:href="https://github.com/sparkjsdev/spark" target="_blank" rel="noopener noreferrer"><title>https://github.com/sparkjsdev/spark</title><text x="1072" y="1604" font-size="24" fill="#3268BE" font-weight="600" data-max-width="166" >Spark ↗</text></a>
+<a href="https://github.com/nianticlabs/spz" xlink:href="https://github.com/nianticlabs/spz" target="_blank" rel="noopener noreferrer"><title>https://github.com/nianticlabs/spz</title><text x="1250" y="1604" font-size="24" fill="#3268BE" font-weight="600" data-max-width="116" >spz ↗</text></a>
+<text x="1392" y="1604" font-size="22" fill="#52677D" font-weight="400" data-max-width="568" >浏览器 GS 查看 / 压缩格式</text>
+<a href="https://github.com/DLR-RM/BlenderProc" xlink:href="https://github.com/DLR-RM/BlenderProc" target="_blank" rel="noopener noreferrer"><title>https://github.com/DLR-RM/BlenderProc</title><text x="1072" y="1648" font-size="24" fill="#3268BE" font-weight="600" data-max-width="272" >BlenderProc ↗</text></a>
+<text x="1370" y="1648" font-size="22" fill="#52677D" font-weight="400" data-max-width="588" >合成 RGB-D、相机与其他监督信号</text>
+<text x="1072" y="1692" font-size="21" fill="#142C45" font-weight="600" data-max-width="888" >几何生成模型之外，还需要格式转换、遮挡处理和独立质量评测。</text>
+<text x="1072" y="1730" font-size="20" fill="#9E651B" font-weight="500" data-max-width="888" >这些是复现工具，不是 Atlas 训练数据来源或完整训练配方的证据。</text>
+<rect x="64" y="1810" width="1920" height="342" rx="22" fill="#FFF5E5" stroke="#DABC8D" stroke-width="1.5" stroke-dasharray="8 6"/>
+<text x="88" y="1856" font-size="29" fill="#9E651B" font-weight="700" data-max-width="1850" >优先改造：WorldWarp 的持久状态闭环（本目录尚未实现）</text>
+<text x="88" y="1896" font-size="21" fill="#52677D" font-weight="400" data-max-width="1850" >先保留现有生成器，补世界级状态与回访测试；SEVA / SCoPE 等相机原生路线不必经过 RGB warp。</text>
+<rect x="88" y="1928" width="400" height="112" rx="14" fill="#FFFFFF" stroke="#DABC8D" stroke-width="1.5" stroke-dasharray="8 6"/>
+<text x="110" y="1970" font-size="25" fill="#142C45" font-weight="700" data-max-width="356" >关键帧 / 全局 GS</text>
+<text x="110" y="2010" font-size="21" fill="#52677D" font-weight="400" data-max-width="356" >session 级持久状态</text>
+<path d="M488 1984 H568" fill="none" stroke="#9E651B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="8 6" marker-end="url(#a-amber)"/>
+<rect x="568" y="1928" width="400" height="112" rx="14" fill="#FFFFFF" stroke="#DABC8D" stroke-width="1.5" stroke-dasharray="8 6"/>
+<text x="590" y="1970" font-size="25" fill="#142C45" font-weight="700" data-max-width="356" >gsplat 目标渲染</text>
+<text x="590" y="2010" font-size="21" fill="#52677D" font-weight="400" data-max-width="356" >RGB + 有效性 mask</text>
+<path d="M968 1984 H1048" fill="none" stroke="#9E651B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="8 6" marker-end="url(#a-amber)"/>
+<rect x="1048" y="1928" width="400" height="112" rx="14" fill="#FFFFFF" stroke="#DABC8D" stroke-width="1.5" stroke-dasharray="8 6"/>
+<text x="1070" y="1970" font-size="25" fill="#142C45" font-weight="700" data-max-width="356" >WorldWarp 新片段</text>
+<text x="1070" y="2010" font-size="21" fill="#52677D" font-weight="400" data-max-width="356" >沿用当前生成接口</text>
+<path d="M1448 1984 H1528" fill="none" stroke="#9E651B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="8 6" marker-end="url(#a-amber)"/>
+<rect x="1528" y="1928" width="432" height="112" rx="14" fill="#FFFFFF" stroke="#DABC8D" stroke-width="1.5" stroke-dasharray="8 6"/>
+<text x="1550" y="1970" font-size="25" fill="#142C45" font-weight="700" data-max-width="388" >几何复核 / 来源门控</text>
+<text x="1550" y="2010" font-size="21" fill="#52677D" font-weight="400" data-max-width="388" >候选通过后再提交</text>
+<path d="M1744 2040 V2094 H288 V2040" fill="none" stroke="#9E651B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="8 6" marker-end="url(#a-amber)"/>
+<text x="650" y="2082" font-size="21" fill="#9E651B" font-weight="600" data-max-width="900" >新观测先校验；生成假设与真实测量分层存储</text>
+<text x="88" y="2130" font-size="20" fill="#52677D" font-weight="500" data-max-width="1850" >验收顺序：统一接口 → 多片段返回原位 → 几何前端替换 → 独立生成 / 重建模型对照</text>
+<rect x="64" y="2190" width="1920" height="148" rx="18" fill="#FFFFFF" stroke="#D6E1EC" stroke-width="1.5"/>
+<text x="88" y="2233" font-size="22" fill="#142C45" font-weight="700" data-max-width="210" >接口契约</text>
+<text x="300" y="2233" font-size="23" fill="#142C45" font-weight="500" data-max-width="1660" >K_px / T_c2w / depth_z / valid / confidence / staticness / 世界时间 / 来源标记</text>
+<text x="88" y="2277" font-size="22" fill="#142C45" font-weight="700" data-max-width="210" >授权边界</text>
+<text x="300" y="2277" font-size="21" fill="#9E651B" font-weight="500" data-max-width="1660" >WorldWarp、PixWorld 根目录许可待确认；代码许可 ≠ 权重许可 ≠ 依赖许可。</text>
+<text x="300" y="2312" font-size="20" fill="#52677D" font-weight="400" data-max-width="1660" >Pi3X、SEVA 等存在非商用限制；候选项目公开不代表已完成商用授权或本地验收。</text>
+<a href="../ATLAS_REVIEW_2026-09-06.md" xlink:href="../ATLAS_REVIEW_2026-09-06.md" target="_blank" rel="noopener noreferrer"><title>../ATLAS_REVIEW_2026-09-06.md</title><text x="64" y="2382" font-size="21" fill="#3268BE" font-weight="600" data-max-width="1250" >完整校准报告 / 源码证据 / 接入计划 ↗</text></a>
+<a href="atlas_architecture_calibrated.svg" xlink:href="atlas_architecture_calibrated.svg" target="_blank" rel="noopener noreferrer"><title>atlas_architecture_calibrated.svg</title><text x="1410" y="2382" font-size="21" fill="#3268BE" font-weight="600" data-max-width="574" >返回 Atlas 功能架构图 ↗</text></a>
+</g>
+</svg>

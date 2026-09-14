@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="2048" height="2060" viewBox="0 0 2048 2060" role="img" aria-labelledby="title desc" xml:lang="zh-CN">
+<title id="title">Atlas V3：任务、模型与系统边界</title>
+<desc id="desc">第三轮审查：任务协议独立于计算流程；原生内容和相机条件进入统一自回归扩散模型，返回按请求生成的结果；显式3D转换是可选资产路径。观测库、计算缓存和世界状态分开解释。</desc>
+<defs>
+<marker id="a-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#3268BE"/></marker>
+<marker id="a-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#087F74"/></marker>
+<marker id="a-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#9E651B"/></marker>
+<marker id="a-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#7555AA"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK SC','Microsoft YaHei','PingFang SC',sans-serif">
+<rect x="0" y="0" width="2048" height="2060" rx="0" fill="#F5F8FC" stroke="#F5F8FC" stroke-width="1.5"/>
+<path d="M64 58 H104" fill="none" stroke="#3268BE" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="122" y="65" font-size="17" fill="#3268BE" font-weight="700" data-max-width="1400" letter-spacing="2">01 / ATLAS · ARCHITECTURE REVIEW</text>
+<text x="1984" y="65" font-size="17" fill="#52677D" font-weight="500" data-max-width="370" text-anchor="end">2026.09.06 · REV 3</text>
+<text x="64" y="124" font-size="46" fill="#142C45" font-weight="700" data-max-width="1920" >Atlas V3：任务、模型与系统边界</text>
+<text x="64" y="170" font-size="22" fill="#52677D" font-weight="400" data-max-width="1920" >第三轮校准：任务调用不再画成输出后处理；保留官方最小事实，将未知实现与工程方案显式分开。</text>
+<rect x="64" y="202" width="1920" height="54" rx="18" fill="#FFFFFF" stroke="#D6E1EC" stroke-width="1.5"/>
+<rect x="88" y="215" width="126" height="28" rx="7" fill="#EAF2FF" stroke="#EAF2FF" stroke-width="1.5"/><text x="151" y="235" font-size="14" fill="#3268BE" font-weight="700" data-max-width="112" text-anchor="middle">官方功能披露</text>
+<text x="232" y="237" font-size="19" fill="#52677D" font-weight="400" data-max-width="400" >实线：逻辑数据关系</text>
+<rect x="672" y="215" width="126" height="28" rx="7" fill="#E9F7F3" stroke="#E9F7F3" stroke-width="1.5"/><text x="735" y="235" font-size="14" fill="#087F74" font-weight="700" data-max-width="112" text-anchor="middle">可选资产输出</text>
+<text x="816" y="237" font-size="19" fill="#52677D" font-weight="400" data-max-width="460" >不要求所有任务都构建 GS</text>
+<rect x="1312" y="215" width="140" height="28" rx="7" fill="#FFF5E5" stroke="#FFF5E5" stroke-width="1.5"/><text x="1382" y="235" font-size="14" fill="#9E651B" font-weight="700" data-max-width="126" text-anchor="middle">未知 / 工程设计</text>
+<text x="1470" y="237" font-size="19" fill="#52677D" font-weight="400" data-max-width="480" >不是 Atlas 已公开的模块</text>
+<text x="64" y="300" font-size="25" fill="#142C45" font-weight="700" data-max-width="1900" >任务调用方式 · 以下为协议示意，不是新增的后处理网络</text>
+<rect x="64" y="328" width="360" height="186" rx="18" fill="#FFFFFF" stroke="#D6E1EC" stroke-width="1.5"/><rect x="64" y="328" width="5" height="186" rx="2" fill="#087F74" stroke="#087F74" stroke-width="1.5"/><rect x="86" y="349" width="48" height="28" rx="7" fill="#E9F7F3" stroke="#E9F7F3" stroke-width="1.5"/><text x="110" y="369" font-size="14" fill="#087F74" font-weight="700" data-max-width="34" text-anchor="middle">R0</text><text x="148" y="372" font-size="25" fill="#142C45" font-weight="700" data-max-width="252" >图像 / 全景</text>
+<text x="88" y="412" font-size="22" fill="#142C45" font-weight="500" data-max-width="312" >文本或参考图像</text>
+<text x="88" y="449" font-size="22" fill="#087F74" font-weight="600" data-max-width="312" >→ 图像 / 360° 全景</text>
+<text x="88" y="490" font-size="18" fill="#52677D" font-weight="400" data-max-width="312" >不要求预先提供全景</text>
+<rect x="454" y="328" width="360" height="186" rx="18" fill="#FFFFFF" stroke="#D6E1EC" stroke-width="1.5"/><rect x="454" y="328" width="5" height="186" rx="2" fill="#087F74" stroke="#087F74" stroke-width="1.5"/><rect x="476" y="349" width="48" height="28" rx="7" fill="#E9F7F3" stroke="#E9F7F3" stroke-width="1.5"/><text x="500" y="369" font-size="14" fill="#087F74" font-weight="700" data-max-width="34" text-anchor="middle">R1</text><text x="538" y="372" font-size="25" fill="#142C45" font-weight="700" data-max-width="252" >相机生成</text>
+<text x="478" y="412" font-size="22" fill="#142C45" font-weight="500" data-max-width="312" >参考图 + 目标相机</text>
+<text x="478" y="449" font-size="22" fill="#087F74" font-weight="600" data-max-width="312" >→ 新视角 / 视频</text>
+<text x="478" y="490" font-size="18" fill="#52677D" font-weight="400" data-max-width="312" >数值相机是控制条件</text>
+<rect x="844" y="328" width="360" height="186" rx="18" fill="#FFFFFF" stroke="#D6E1EC" stroke-width="1.5"/><rect x="844" y="328" width="5" height="186" rx="2" fill="#087F74" stroke="#087F74" stroke-width="1.5"/><rect x="866" y="349" width="48" height="28" rx="7" fill="#E9F7F3" stroke="#E9F7F3" stroke-width="1.5"/><text x="890" y="369" font-size="14" fill="#087F74" font-weight="700" data-max-width="34" text-anchor="middle">R2</text><text x="928" y="372" font-size="25" fill="#142C45" font-weight="700" data-max-width="252" >空间重构</text>
+<text x="868" y="412" font-size="22" fill="#142C45" font-weight="500" data-max-width="312" >观测图像 / 视频</text>
+<text x="868" y="449" font-size="22" fill="#087F74" font-weight="600" data-max-width="312" >→ 几何与场景内容</text>
+<text x="868" y="490" font-size="18" fill="#52677D" font-weight="400" data-max-width="312" >未观测区域仍可能生成</text>
+<rect x="1234" y="328" width="360" height="186" rx="18" fill="#FFFFFF" stroke="#D6E1EC" stroke-width="1.5"/><rect x="1234" y="328" width="5" height="186" rx="2" fill="#087F74" stroke="#087F74" stroke-width="1.5"/><rect x="1256" y="349" width="48" height="28" rx="7" fill="#E9F7F3" stroke="#E9F7F3" stroke-width="1.5"/><text x="1280" y="369" font-size="14" fill="#087F74" font-weight="700" data-max-width="34" text-anchor="middle">R3</text><text x="1318" y="372" font-size="25" fill="#142C45" font-weight="700" data-max-width="252" >视频重构</text>
+<text x="1258" y="412" font-size="22" fill="#142C45" font-weight="500" data-max-width="312" >多相机视频</text>
+<text x="1258" y="449" font-size="22" fill="#087F74" font-weight="600" data-max-width="312" >→ 冻结时间 / 新视角</text>
+<text x="1258" y="490" font-size="18" fill="#52677D" font-weight="400" data-max-width="312" >不等于未来动作预测</text>
+<rect x="1624" y="328" width="360" height="186" rx="18" fill="#FFFFFF" stroke="#D6E1EC" stroke-width="1.5"/><rect x="1624" y="328" width="5" height="186" rx="2" fill="#087F74" stroke="#087F74" stroke-width="1.5"/><rect x="1646" y="349" width="48" height="28" rx="7" fill="#E9F7F3" stroke="#E9F7F3" stroke-width="1.5"/><text x="1670" y="369" font-size="14" fill="#087F74" font-weight="700" data-max-width="34" text-anchor="middle">R4</text><text x="1708" y="372" font-size="25" fill="#142C45" font-weight="700" data-max-width="252" >机器人观测</text>
+<text x="1648" y="412" font-size="22" fill="#142C45" font-weight="500" data-max-width="312" >环境 + 机器人相机</text>
+<text x="1648" y="449" font-size="22" fill="#087F74" font-weight="600" data-max-width="312" >→ RGB-D 观测</text>
+<text x="1648" y="490" font-size="18" fill="#52677D" font-weight="400" data-max-width="312" >动作 token 格式未披露</text>
+<rect x="514" y="582" width="994" height="520" rx="24" fill="#EAF2FF" stroke="#BCD1ED" stroke-width="1.5"/>
+<text x="540" y="629" font-size="29" fill="#3268BE" font-weight="700" data-max-width="942" >统一多模态自回归扩散 Transformer · 从零预训练</text>
+<path d="M454 722 H540" fill="none" stroke="#3268BE" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a-blue)"/>
+<path d="M454 940 H487 V849 H540" fill="none" stroke="#3268BE" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a-blue)"/>
+<path d="M830 797 H875" fill="none" stroke="#3268BE" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a-blue)"/>
+<path d="M1135 797 H1180" fill="none" stroke="#3268BE" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a-blue)"/>
+<path d="M1482 782 H1564" fill="none" stroke="#3268BE" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a-blue)"/>
+<rect x="64" y="610" width="390" height="184" rx="18" fill="#FFFFFF" stroke="#D6E1EC" stroke-width="1.5"/><rect x="64" y="610" width="5" height="184" rx="2" fill="#3268BE" stroke="#3268BE" stroke-width="1.5"/><rect x="86" y="631" width="48" height="28" rx="7" fill="#EAF2FF" stroke="#EAF2FF" stroke-width="1.5"/><text x="110" y="651" font-size="14" fill="#3268BE" font-weight="700" data-max-width="34" text-anchor="middle">F1</text><text x="148" y="654" font-size="25" fill="#142C45" font-weight="700" data-max-width="282" >内容输入</text>
+<text x="88" y="697" font-size="22" fill="#142C45" font-weight="500" data-max-width="342" >文本 / 图像 / 视频帧 / 深度</text>
+<text x="88" y="739" font-size="22" fill="#52677D" font-weight="400" data-max-width="342" >只提供任务所需模态</text>
+<text x="88" y="774" font-size="18" fill="#52677D" font-weight="400" data-max-width="342" >不假设所有输入已经是完整 3D</text>
+<rect x="64" y="838" width="390" height="205" rx="18" fill="#FFFFFF" stroke="#D6E1EC" stroke-width="1.5"/><rect x="64" y="838" width="5" height="205" rx="2" fill="#3268BE" stroke="#3268BE" stroke-width="1.5"/><rect x="86" y="859" width="48" height="28" rx="7" fill="#EAF2FF" stroke="#EAF2FF" stroke-width="1.5"/><text x="110" y="879" font-size="14" fill="#3268BE" font-weight="700" data-max-width="34" text-anchor="middle">F2</text><text x="148" y="882" font-size="25" fill="#142C45" font-weight="700" data-max-width="282" >空间条件与查询</text>
+<text x="88" y="925" font-size="24" fill="#142C45" font-weight="500" data-max-width="342" >观测相机 + 请求相机</text>
+<text x="88" y="966" font-size="21" fill="#52677D" font-weight="400" data-max-width="342" >图像 / 深度由相机空间锚定</text>
+<text x="88" y="1019" font-size="18" fill="#9E651B" font-weight="500" data-max-width="342" >相机编码、时间编码的细节未公开</text>
+<rect x="540" y="674" width="290" height="232" rx="18" fill="#FFFFFF" stroke="#D6E1EC" stroke-width="1.5"/><rect x="540" y="674" width="5" height="232" rx="2" fill="#3268BE" stroke="#3268BE" stroke-width="1.5"/><rect x="562" y="695" width="48" height="28" rx="7" fill="#EAF2FF" stroke="#EAF2FF" stroke-width="1.5"/><text x="586" y="715" font-size="14" fill="#3268BE" font-weight="700" data-max-width="34" text-anchor="middle">F3</text><text x="624" y="718" font-size="25" fill="#142C45" font-weight="700" data-max-width="182" >输入表征</text>
+<text x="564" y="760" font-size="21" fill="#142C45" font-weight="500" data-max-width="242" >内容编码与空间锚定</text>
+<text x="564" y="804" font-size="17" fill="#52677D" font-weight="400" data-max-width="242" >已知：模型级 latent diffusion</text>
+<text x="564" y="845" font-size="17" fill="#9E651B" font-weight="500" data-max-width="242" >不指定 RGB / depth 的 VAE</text>
+<text x="564" y="884" font-size="18" fill="#52677D" font-weight="400" data-max-width="242" >codec、参数共享方式未知</text>
+<rect x="875" y="674" width="260" height="232" rx="18" fill="#FFFFFF" stroke="#D6E1EC" stroke-width="1.5"/><rect x="875" y="674" width="5" height="232" rx="2" fill="#3268BE" stroke="#3268BE" stroke-width="1.5"/><rect x="897" y="695" width="48" height="28" rx="7" fill="#EAF2FF" stroke="#EAF2FF" stroke-width="1.5"/><text x="921" y="715" font-size="14" fill="#3268BE" font-weight="700" data-max-width="34" text-anchor="middle">F4</text><text x="959" y="718" font-size="25" fill="#142C45" font-weight="700" data-max-width="152" >上下文</text>
+<text x="899" y="760" font-size="20" fill="#142C45" font-weight="500" data-max-width="212" >观测 / 先前序列元素</text>
+<text x="899" y="804" font-size="20" fill="#52677D" font-weight="400" data-max-width="212" >空间条件共同参与</text>
+<text x="899" y="845" font-size="19" fill="#9E651B" font-weight="500" data-max-width="212" >具体 token 粒度未知</text>
+<text x="899" y="884" font-size="18" fill="#52677D" font-weight="400" data-max-width="212" >不是“永久 3D 地图”</text>
+<rect x="1180" y="656" width="302" height="330" rx="18" fill="#FFFFFF" stroke="#D6E1EC" stroke-width="1.5"/><rect x="1180" y="656" width="5" height="330" rx="2" fill="#3268BE" stroke="#3268BE" stroke-width="1.5"/><rect x="1202" y="677" width="48" height="28" rx="7" fill="#EAF2FF" stroke="#EAF2FF" stroke-width="1.5"/><text x="1226" y="697" font-size="14" fill="#3268BE" font-weight="700" data-max-width="34" text-anchor="middle">F5</text><text x="1264" y="700" font-size="25" fill="#142C45" font-weight="700" data-max-width="194" >AR + Flow</text>
+<text x="1204" y="744" font-size="22" fill="#142C45" font-weight="600" data-max-width="254" >外层：逐序列元素生成</text>
+<rect x="1204" y="768" width="254" height="135" rx="12" fill="#FFFFFF" stroke="#BFD2EC" stroke-width="1.5"/>
+<text x="1220" y="803" font-size="20" fill="#3268BE" font-weight="600" data-max-width="222" >连续输出的内部采样</text>
+<text x="1220" y="843" font-size="24" fill="#3268BE" font-weight="700" data-max-width="222" >Rectified Flow</text>
+<text x="1220" y="880" font-size="20" fill="#52677D" font-weight="400" data-max-width="222" >噪声 → 去噪 → 结果</text>
+<text x="1204" y="950" font-size="20" fill="#52677D" font-weight="500" data-max-width="254" >序列 j 与去噪 s 分开</text>
+<path d="M1331 986 V1030 H1005 V906" fill="none" stroke="#3268BE" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a-blue)"/>
+<text x="540" y="1072" font-size="20" fill="#3268BE" font-weight="500" data-max-width="942" >先前元素形成后续条件；具体历史检索、截断与缓存实现未公开。</text>
+<rect x="1564" y="656" width="420" height="214" rx="18" fill="#FFFFFF" stroke="#D6E1EC" stroke-width="1.5"/><rect x="1564" y="656" width="5" height="214" rx="2" fill="#087F74" stroke="#087F74" stroke-width="1.5"/><rect x="1586" y="677" width="48" height="28" rx="7" fill="#E9F7F3" stroke="#E9F7F3" stroke-width="1.5"/><text x="1610" y="697" font-size="14" fill="#087F74" font-weight="700" data-max-width="34" text-anchor="middle">F6</text><text x="1648" y="700" font-size="25" fill="#142C45" font-weight="700" data-max-width="312" >按请求返回结果</text>
+<text x="1588" y="744" font-size="24" fill="#142C45" font-weight="500" data-max-width="372" >图像 / 全景 / 视频帧</text>
+<text x="1588" y="787" font-size="24" fill="#087F74" font-weight="600" data-max-width="372" >深度 / 几何结果</text>
+<text x="1588" y="838" font-size="18" fill="#52677D" font-weight="400" data-max-width="372" >这里是输出类型，不代表独立输出头</text>
+<path d="M1774 870 V922" fill="none" stroke="#087F74" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a-teal)"/>
+<rect x="1564" y="922" width="420" height="204" rx="18" fill="#FFFFFF" stroke="#D6E1EC" stroke-width="1.5"/><rect x="1564" y="922" width="5" height="204" rx="2" fill="#087F74" stroke="#087F74" stroke-width="1.5"/><rect x="1586" y="943" width="48" height="28" rx="7" fill="#E9F7F3" stroke="#E9F7F3" stroke-width="1.5"/><text x="1610" y="963" font-size="14" fill="#087F74" font-weight="700" data-max-width="34" text-anchor="middle">R2</text><text x="1648" y="966" font-size="25" fill="#142C45" font-weight="700" data-max-width="312" >可选 3D 资产转换</text>
+<text x="1588" y="1008" font-size="23" fill="#142C45" font-weight="500" data-max-width="372" >几何 + 图像 + 相机</text>
+<text x="1588" y="1048" font-size="23" fill="#087F74" font-weight="600" data-max-width="372" >→ 点云 → Gaussian splats</text>
+<text x="1588" y="1095" font-size="18" fill="#9E651B" font-weight="500" data-max-width="372" >转换方法未公开；不反推 GS 内循环</text>
+<path d="M1774 1126 V1176" fill="none" stroke="#087F74" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a-teal)"/>
+<rect x="1564" y="1176" width="420" height="118" rx="16" fill="#E9F7F3" stroke="#B7DCCE" stroke-width="1.5"/>
+<text x="1588" y="1222" font-size="25" fill="#087F74" font-weight="700" data-max-width="372" >端侧资产渲染 / 展示</text>
+<text x="1588" y="1263" font-size="18" fill="#52677D" font-weight="500" data-max-width="372" >资产渲染 ≠ 原生神经 RGB-D 生成</text>
+<rect x="64" y="1142" width="1444" height="152" rx="18" fill="#FFFFFF" stroke="#D6E1EC" stroke-width="1.5"/>
+<text x="88" y="1185" font-size="25" fill="#142C45" font-weight="700" data-max-width="1396" >第三版的推断边界</text>
+<text x="88" y="1229" font-size="23" fill="#52677D" font-weight="400" data-max-width="1396" >未披露：模态 codec、精确序列协议、空间编码、状态淘汰策略、3D 转换算子。</text>
+<text x="88" y="1268" font-size="21" fill="#9E651B" font-weight="500" data-max-width="1396" >能使用 KV-cache 等加速思路，不等于公开了实际服务实现；世界时间 t 也不等于生成步数。</text>
+<text x="64" y="1350" font-size="29" fill="#142C45" font-weight="700" data-max-width="1300" >E1 · 三类“记忆”不可合并理解</text>
+<text x="64" y="1388" font-size="21" fill="#52677D" font-weight="400" data-max-width="1900" >下列是工程层的职责划分；不声称 Atlas 内部采用这三个可拆分组件。</text>
+<rect x="64" y="1414" width="616" height="214" rx="18" fill="#FFFFFF" stroke="#D9BD91" stroke-width="1.5" stroke-dasharray="8 6"/>
+<text x="88" y="1461" font-size="27" fill="#142C45" font-weight="700" data-max-width="568" >观测证据库</text>
+<text x="88" y="1505" font-size="23" fill="#52677D" font-weight="500" data-max-width="568" >原始采集帧、相机与来源</text>
+<text x="88" y="1550" font-size="21" fill="#52677D" font-weight="400" data-max-width="568" >可检索 / 可追溯；估计深度不是真值</text>
+<text x="88" y="1597" font-size="20" fill="#9E651B" font-weight="600" data-max-width="568" >原始观测不可被生成帧悄悄覆盖</text>
+<rect x="716" y="1414" width="616" height="214" rx="18" fill="#FFFFFF" stroke="#D9BD91" stroke-width="1.5" stroke-dasharray="8 6"/>
+<text x="740" y="1461" font-size="27" fill="#142C45" font-weight="700" data-max-width="568" >模型计算缓存</text>
+<text x="740" y="1505" font-size="23" fill="#52677D" font-weight="500" data-max-width="568" >KV / token 状态等计算结果</text>
+<text x="740" y="1550" font-size="21" fill="#52677D" font-weight="400" data-max-width="568" >受模型协议、条件与上下文版本约束</text>
+<text x="740" y="1597" font-size="20" fill="#9E651B" font-weight="600" data-max-width="568" >能缓存 ≠ 无限记忆 ≠ 全局回环</text>
+<rect x="1368" y="1414" width="616" height="214" rx="18" fill="#FFFFFF" stroke="#D9BD91" stroke-width="1.5" stroke-dasharray="8 6"/>
+<text x="1392" y="1461" font-size="27" fill="#142C45" font-weight="700" data-max-width="568" >显式世界状态</text>
+<text x="1392" y="1505" font-size="23" fill="#52677D" font-weight="500" data-max-width="568" >点云 / GS / 坐标系 / 地图版本</text>
+<text x="1392" y="1550" font-size="21" fill="#52677D" font-weight="400" data-max-width="568" >观测支持层与生成假设层分开管理</text>
+<text x="1392" y="1597" font-size="20" fill="#9E651B" font-weight="600" data-max-width="568" >地图重对齐后需检查缓存是否失效</text>
+<rect x="64" y="1672" width="936" height="236" rx="18" fill="#FFFFFF" stroke="#9E651B" stroke-width="1.5" stroke-dasharray="8 6"/><rect x="64" y="1672" width="5" height="236" rx="2" fill="#9E651B" stroke="#9E651B" stroke-width="1.5"/><rect x="86" y="1693" width="48" height="28" rx="7" fill="#FFF5E5" stroke="#FFF5E5" stroke-width="1.5"/><text x="110" y="1713" font-size="14" fill="#9E651B" font-weight="700" data-max-width="34" text-anchor="middle">E2</text><text x="148" y="1716" font-size="25" fill="#142C45" font-weight="700" data-max-width="828" >交互物理：系统功能，不指认求解器</text>
+<text x="88" y="1761" font-size="24" fill="#142C45" font-weight="600" data-max-width="888" >机器人动作 / 当前状态 / 物理资产 → 动力学更新</text>
+<text x="88" y="1803" font-size="22" fill="#52677D" font-weight="400" data-max-width="888" >更新后的场景与相机 → 观测生成 / 渲染（集成方式未知）</text>
+<text x="88" y="1847" font-size="21" fill="#52677D" font-weight="400" data-max-width="888" >碰撞体、关节与材料参数不能仅靠一份 GS 外观资产替代。</text>
+<text x="88" y="1881" font-size="20" fill="#9E651B" font-weight="600" data-max-width="888" >4D 动作回放与反事实交互必须分别验证。</text>
+<rect x="1048" y="1672" width="936" height="236" rx="18" fill="#FFFFFF" stroke="#9E651B" stroke-width="1.5" stroke-dasharray="8 6"/><rect x="1048" y="1672" width="5" height="236" rx="2" fill="#9E651B" stroke="#9E651B" stroke-width="1.5"/><rect x="1070" y="1693" width="48" height="28" rx="7" fill="#FFF5E5" stroke="#FFF5E5" stroke-width="1.5"/><text x="1094" y="1713" font-size="14" fill="#9E651B" font-weight="700" data-max-width="34" text-anchor="middle">E3</text><text x="1132" y="1716" font-size="25" fill="#142C45" font-weight="700" data-max-width="828" >训练与评测：避免超出证据范围</text>
+<text x="1072" y="1761" font-size="24" fill="#142C45" font-weight="600" data-max-width="888" >数据配方 / 几何监督 / 计算规模：未完整披露</text>
+<text x="1072" y="1803" font-size="22" fill="#52677D" font-weight="400" data-max-width="888" >相机跟随、几何误差、回访一致性、物理响应分别评估。</text>
+<text x="1072" y="1847" font-size="20" fill="#52677D" font-weight="400" data-max-width="888" >posed 重建比较不能证明无位姿 SLAM；长视频展示不是吞吐测试。</text>
+<text x="1072" y="1881" font-size="20" fill="#9E651B" font-weight="600" data-max-width="888" >本次验证架构表达与接口语义，不宣称复现 Atlas 的效果。</text>
+<a href="https://www.worldlabs.ai/blog/atlas" xlink:href="https://www.worldlabs.ai/blog/atlas" target="_blank" rel="noopener noreferrer"><title>https://www.worldlabs.ai/blog/atlas</title><text x="64" y="1968" font-size="21" fill="#3268BE" font-weight="600" data-max-width="560" >官方：Atlas ↗</text></a>
+<a href="https://www.worldlabs.ai/blog/real-to-sim-to-real" xlink:href="https://www.worldlabs.ai/blog/real-to-sim-to-real" target="_blank" rel="noopener noreferrer"><title>https://www.worldlabs.ai/blog/real-to-sim-to-real</title><text x="650" y="1968" font-size="21" fill="#3268BE" font-weight="600" data-max-width="620" >官方：R2S2R ↗</text></a>
+<a href="../ATLAS_REVIEW_V3_2026-09-06.md" xlink:href="../ATLAS_REVIEW_V3_2026-09-06.md" target="_blank" rel="noopener noreferrer"><title>../ATLAS_REVIEW_V3_2026-09-06.md</title><text x="1420" y="1968" font-size="21" fill="#3268BE" font-weight="600" data-max-width="564" >第三版校准与代码证据 ↗</text></a>
+<text x="64" y="2018" font-size="19" fill="#52677D" font-weight="400" data-max-width="1920" >原生 SVG · 蓝色为官方功能关系，绿色为可选资产链路，金色虚线为未知实现或工程设计 · F / R / E 与项目图对应</text>
+</g>
+</svg>
+

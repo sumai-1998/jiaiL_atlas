@@ -1,0 +1,51 @@
+{
+  "import_date": "2026-09-14",
+  "repositories": [
+    {
+      "path": "WorldWarp",
+      "upstream": "https://github.com/HyoKong/WorldWarp.git",
+      "commit": "0396b801c278546d01a6618a18e5a5c2a154c0a1",
+      "local_changes": [
+        " M gradio_demo.py",
+        " M pose_control.py",
+        "?? chunk_trajectory.py"
+      ]
+    },
+    {
+      "path": "WorldWarp/src/simple-knn",
+      "upstream": "https://github.com/camenduru/simple-knn.git",
+      "commit": "60f461f4a56b7967e5d8045bf92f8c33f36976d0",
+      "local_changes": []
+    },
+    {
+      "path": "WorldWarp/src/fused-ssim",
+      "upstream": "https://github.com/rahul-goel/fused-ssim.git",
+      "commit": "98126b7781f9e563234c92d2bf08ee0994f4f175",
+      "local_changes": []
+    },
+    {
+      "path": "MapAnything",
+      "upstream": "https://github.com/facebookresearch/map-anything.git",
+      "commit": "3d10cf7a3016fc0f9bb13a071ee66c47b10be0d9",
+      "local_changes": []
+    },
+    {
+      "path": "GaME",
+      "upstream": "https://github.com/VladimirYugay/GaME.git",
+      "commit": "1c971d65d29952789fa4a2ebb342580d41acbbff",
+      "local_changes": [
+        " M submodules/simple-knn/build/temp.linux-x86_64-cpython-310/.ninja_deps",
+        " M submodules/simple-knn/build/temp.linux-x86_64-cpython-310/.ninja_log",
+        " M submodules/simple-knn/build/temp.linux-x86_64-cpython-310/build.ninja",
+        " M submodules/simple-knn/build/temp.linux-x86_64-cpython-310/ext.o",
+        " M submodules/simple-knn/build/temp.linux-x86_64-cpython-310/simple_knn.o",
+        " M submodules/simple-knn/build/temp.linux-x86_64-cpython-310/spatial.o"
+      ]
+    }
+  ],
+  "layout": "Vendored source directories; no submodules or nested Git repositories",
+  "removed_gitmodules": [
+    "WorldWarp/.gitmodules",
+    "GaME/submodules/diff-gaussian-rasterization/.gitmodules"
+  ]
+}

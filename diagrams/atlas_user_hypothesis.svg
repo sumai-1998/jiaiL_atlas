@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1920" height="1580" viewBox="0 0 1920 1580" role="img" aria-labelledby="title desc" xml:lang="zh-CN">
+<title id="title">用户提出的 Atlas 工程假设：3DGS 引导的自回归世界生成与 4D 扩展</title>
+<desc id="desc">这是一张按用户假设绘制的工程框架图，不是 Atlas 官方结构。多模态输入经类 Marble 初始化，得到局部三维高斯地图与参考图。循环为：当前地图与新相机位置渲染粗图，粗图连同原始参考、首帧高斯渲染和历史帧条件驱动自回归扩散生成；新帧结合深度和相机经三维对齐、校验与融合，写回地图，并把生成帧加入参考历史。4D 扩展共享动态场景，分别支持固定时间换视角、固定视角推进时间。控制可分开，不代表底层时空模型完全独立。</desc>
+<defs>
+<marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 1 1 L 9 5 L 1 9 Z" fill="#3469C6"/></marker>
+<marker id="arrow-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 1 1 L 9 5 L 1 9 Z" fill="#087F73"/></marker>
+<marker id="arrow-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 1 1 L 9 5 L 1 9 Z" fill="#7855B8"/></marker>
+</defs>
+<style>text{font-family:"Noto Sans CJK SC","Microsoft YaHei","PingFang SC",sans-serif;} a{cursor:pointer;} a:hover text{text-decoration:underline;}</style>
+<rect x="0" y="0" width="1920" height="1580" rx="0" fill="#F5F8FC" stroke="#F5F8FC" stroke-width="1.6"/>
+<text x="64" y="91" font-size="42" font-weight="700" fill="#17324D" text-anchor="start" data-max-width="1792">你的 Atlas 实现假设：3DGS 引导的自回归世界生成</text>
+<text x="64" y="137" font-size="24" font-weight="400" fill="#5E738A" text-anchor="start" data-max-width="1792">先建立局部世界，再不断“换视角 → 渲染 → 生成 → 融合”；下方扩展时间维度。</text>
+<rect x="64" y="166" width="1792" height="42" rx="10" fill="#FFF5E5" stroke="#FFF5E5" stroke-width="1.6"/>
+<text x="84" y="195" font-size="21" font-weight="600" fill="#9B651A" text-anchor="start" data-max-width="1740">工程假设图：按你的思路组织，不代表 Atlas 已公开或已验证的内部结构。</text>
+<text x="64" y="251" font-size="28" font-weight="700" fill="#17324D" text-anchor="start" data-max-width="1792">① 初始化世界</text>
+<rect x="64" y="278" width="330" height="154" rx="18" fill="#fff" stroke="#D7E2EE" stroke-width="1.6"/>
+<text x="88" y="324" font-size="29" font-weight="700" fill="#17324D" text-anchor="start" data-max-width="282">多模态输入</text>
+<text x="88" y="367" font-size="23" font-weight="400" fill="#5E738A" text-anchor="start" data-max-width="282">单图 / 多图 / 纯文本</text>
+<text x="88" y="401" font-size="23" font-weight="400" fill="#5E738A" text-anchor="start" data-max-width="282">也可以输入视频</text>
+<rect x="454" y="278" width="500" height="154" rx="18" fill="#EDF4FF" stroke="#CCDDF3" stroke-width="1.6"/>
+<text x="478" y="324" font-size="29" font-weight="700" fill="#3469C6" text-anchor="start" data-max-width="452">初始世界生成（类 Marble）</text>
+<text x="478" y="367" font-size="23" font-weight="400" fill="#5E738A" text-anchor="start" data-max-width="452">根据输入补全初始视图与几何</text>
+<text x="478" y="401" font-size="23" font-weight="400" fill="#5E738A" text-anchor="start" data-max-width="452">建立局部 3DGS，并保存参考图</text>
+<rect x="1054" y="278" width="802" height="154" rx="18" fill="#fff" stroke="#D7E2EE" stroke-width="1.6"/>
+<text x="1078" y="324" font-size="29" font-weight="700" fill="#17324D" text-anchor="start" data-max-width="754">生成时反复参考的内容</text>
+<text x="1078" y="367" font-size="25" font-weight="600" fill="#17324D" text-anchor="start" data-max-width="754">原始参考图  +  首帧 GS 渲染图</text>
+<text x="1078" y="401" font-size="22" font-weight="400" fill="#5E738A" text-anchor="start" data-max-width="754">以及已生成帧 / 最近关键帧；纯文本时先生成参考图</text>
+<path d="M 394 355 H 454" fill="none" stroke="#3469C6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<path d="M 954 355 H 1054" fill="none" stroke="#3469C6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<path d="M 704 432 V 458 H 229 V 624" fill="none" stroke="#3469C6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<text x="80" y="581" font-size="23" font-weight="600" fill="#3469C6" text-anchor="start" data-max-width="320">初始化局部 GS 地图</text>
+<text x="454" y="526" font-size="30" font-weight="700" fill="#17324D" text-anchor="start" data-max-width="720">② 换视角，循环扩展世界</text>
+<text x="454" y="568" font-size="23" font-weight="400" fill="#5E738A" text-anchor="start" data-max-width="720">小幅移动相机，有利于复用已有可见内容。</text>
+<path d="M 1200 432 V 624" fill="none" stroke="#3469C6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<text x="1220" y="556" font-size="20" font-weight="500" fill="#3469C6" text-anchor="start" data-max-width="132">参考条件</text>
+<rect x="64" y="624" width="330" height="226" rx="18" fill="#EDF4FF" stroke="#CCDDF3" stroke-width="1.6"/>
+<text x="88" y="674" font-size="27" font-weight="700" fill="#3469C6" text-anchor="start" data-max-width="282">当前 3DGS 地图</text>
+<text x="88" y="720" font-size="23" font-weight="400" fill="#5E738A" text-anchor="start" data-max-width="282">存储已生成的场景</text>
+<text x="88" y="765" font-size="25" font-weight="600" fill="#17324D" text-anchor="start" data-max-width="282">相机再移动一点</text>
+<text x="88" y="808" font-size="23" font-weight="400" fill="#5E738A" text-anchor="start" data-max-width="282">选择下一个目标机位</text>
+<rect x="454" y="624" width="350" height="226" rx="18" fill="#fff" stroke="#D7E2EE" stroke-width="1.6"/>
+<text x="478" y="674" font-size="29" font-weight="700" fill="#17324D" text-anchor="start" data-max-width="302">新机位 GS 渲染</text>
+<text x="478" y="720" font-size="25" font-weight="600" fill="#17324D" text-anchor="start" data-max-width="302">得到新视角粗糙图</text>
+<text x="478" y="765" font-size="23" font-weight="400" fill="#5E738A" text-anchor="start" data-max-width="302">大部分内容可复用</text>
+<text x="478" y="808" font-size="22" font-weight="400" fill="#5E738A" text-anchor="start" data-max-width="302">同时输出深度 / 空洞掩码</text>
+<rect x="864" y="624" width="480" height="226" rx="18" fill="#EDF4FF" stroke="#CCDDF3" stroke-width="1.6"/>
+<text x="888" y="674" font-size="30" font-weight="700" fill="#3469C6" text-anchor="start" data-max-width="432">AR 扩散生成</text>
+<text x="888" y="720" font-size="24" font-weight="600" fill="#17324D" text-anchor="start" data-max-width="432">粗糙图 + 参考条件 + 相机</text>
+<text x="888" y="765" font-size="23" font-weight="400" fill="#5E738A" text-anchor="start" data-max-width="432">修复瑕疵，补全新露出的区域</text>
+<text x="888" y="808" font-size="24" font-weight="600" fill="#17324D" text-anchor="start" data-max-width="432">输出新视角帧（或短片段）</text>
+<rect x="1404" y="624" width="452" height="226" rx="18" fill="#EAF8F4" stroke="#BEE2D8" stroke-width="1.6"/>
+<text x="1428" y="674" font-size="28" font-weight="700" fill="#087F73" text-anchor="start" data-max-width="404">三维融合（类 SLAM）</text>
+<text x="1428" y="720" font-size="24" font-weight="600" fill="#17324D" text-anchor="start" data-max-width="404">新帧 + 估计深度 + 相机</text>
+<text x="1428" y="765" font-size="22" font-weight="400" fill="#5E738A" text-anchor="start" data-max-width="404">对齐旧地图，检查尺度 / 遮挡</text>
+<text x="1428" y="808" font-size="24" font-weight="600" fill="#17324D" text-anchor="start" data-max-width="404">融合点云，新增 / 修正 GS</text>
+<path d="M 394 735 H 454" fill="none" stroke="#3469C6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<path d="M 804 735 H 864" fill="none" stroke="#3469C6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<path d="M 1344 735 H 1404" fill="none" stroke="#087F73" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-teal)"/>
+<path d="M 1630 850 V 929 H 229 V 850" fill="none" stroke="#087F73" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-teal)"/>
+<text x="930" y="913" font-size="25" font-weight="600" fill="#087F73" text-anchor="middle" data-max-width="1400">把新区域融合到旧地图，再换一个机位，继续下一轮</text>
+<path d="M 1300 624 V 592 H 1374 V 432" fill="none" stroke="#3469C6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 6" marker-end="url(#arrow-blue)"/>
+<text x="1396" y="557" font-size="21" font-weight="500" fill="#3469C6" text-anchor="start" data-max-width="430">生成帧追加到历史参考</text>
+<text x="64" y="978" font-size="22" font-weight="400" fill="#5E738A" text-anchor="start" data-max-width="1792">注意：生成下一帧，不等于场景时间前进。上面的换视角循环，可以始终固定在同一时刻 t。</text>
+<text x="64" y="1049" font-size="30" font-weight="700" fill="#17324D" text-anchor="start" data-max-width="1792">③ 4D 扩展：给同一个世界加上时间 t</text>
+<text x="64" y="1092" font-size="24" font-weight="400" fill="#5E738A" text-anchor="start" data-max-width="1792">共享“静态背景 + 随时间变化的物体 / 动态 GS”；每次选择机位 C 与时间 t。</text>
+<rect x="64" y="1124" width="864" height="180" rx="18" fill="#F4EFFC" stroke="#DDD0F1" stroke-width="1.6"/>
+<text x="88" y="1171" font-size="29" font-weight="700" fill="#7855B8" text-anchor="start" data-max-width="816">空间分支：固定 t，改变 C</text>
+<text x="88" y="1220" font-size="25" font-weight="600" fill="#17324D" text-anchor="start" data-max-width="816">取 t 时刻的场景 → 复用上面的换视角闭环</text>
+<text x="88" y="1267" font-size="23" font-weight="400" fill="#5E738A" text-anchor="start" data-max-width="816">相当于暂停动作后，绕着场景看。</text>
+<rect x="992" y="1124" width="864" height="180" rx="18" fill="#F4EFFC" stroke="#DDD0F1" stroke-width="1.6"/>
+<text x="1016" y="1171" font-size="29" font-weight="700" fill="#7855B8" text-anchor="start" data-max-width="816">时间分支：固定 C，推进 t</text>
+<text x="1016" y="1220" font-size="23" font-weight="600" fill="#17324D" text-anchor="start" data-max-width="816">动态状态 / 4DGS(t) → 渲染 → 生成修复 → 动态层更新</text>
+<text x="1016" y="1267" font-size="23" font-weight="400" fill="#5E738A" text-anchor="start" data-max-width="816">相当于相机不动，看物体运动；需要时序生成能力。</text>
+<rect x="64" y="1328" width="1792" height="58" rx="12" fill="#fff" stroke="#D7E2EE" stroke-width="1.6"/>
+<text x="88" y="1366" font-size="24" font-weight="500" fill="#17324D" text-anchor="start" data-max-width="1744">两种控制可组合：机位与时间同时改变；动态物体不能直接融合进静态 GS 地图。</text>
+<text x="64" y="1437" font-size="22" font-weight="400" fill="#5E738A" text-anchor="start" data-max-width="1792">4DGS 负责表示 / 渲染动态场景，本身不等于预测未来；控制可分开，也不证明时空模型完全解耦。</text>
+<text x="64" y="1480" font-size="22" font-weight="400" fill="#5E738A" text-anchor="start" data-max-width="1792">原始输入与生成内容分开保存；生成图不是真实观测，纯文本初始化没有真实首帧 GT。</text>
+<a href="https://www.worldlabs.ai/blog/atlas" xlink:href="https://www.worldlabs.ai/blog/atlas" target="_blank" rel="noopener noreferrer"><text x="64" y="1541" font-size="20" font-weight="600" fill="#3469C6" text-anchor="start" data-max-width="340">Atlas 官方说明 ↗</text>
+</a>
+<a href="https://www.worldlabs.ai/blog/marble-world-model" xlink:href="https://www.worldlabs.ai/blog/marble-world-model" target="_blank" rel="noopener noreferrer"><text x="434" y="1541" font-size="20" font-weight="600" fill="#3469C6" text-anchor="start" data-max-width="350">Marble 官方说明 ↗</text>
+</a>
+<a href="https://guanjunwu.github.io/4dgs/" xlink:href="https://guanjunwu.github.io/4dgs/" target="_blank" rel="noopener noreferrer"><text x="814" y="1541" font-size="20" font-weight="600" fill="#3469C6" text-anchor="start" data-max-width="330">4D-GS 项目 ↗</text>
+</a>
+<text x="1856" y="1541" font-size="20" font-weight="400" fill="#5E738A" text-anchor="end" data-max-width="560">原生 SVG · 保留所有旧图</text>
+</svg>

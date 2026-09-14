@@ -1,0 +1,225 @@
+{
+  "schema_version": 1,
+  "video_contract": {
+    "width": 480,
+    "height": 608,
+    "chunks": 4,
+    "fps": 30,
+    "delivered_frames": 321,
+    "total_seconds": 10.7,
+    "chunk_frames": 81
+  },
+  "pipelines": [
+    {
+      "id": "ww-rotate",
+      "aliases": [
+        "A",
+        "worldwarp",
+        "原版左转"
+      ],
+      "kind": "video",
+      "name": "WorldWarp 原版匀速左转",
+      "geometry": "TTT3R -> WorldWarp native GS",
+      "motion": "pan-left",
+      "context_frames": 1,
+      "strength": 0.6,
+      "full_capture": true,
+      "historical_evidence": "classroom A, 2026-09-07 and 2026-09-14",
+      "environments": [
+        "worldwarp"
+      ]
+    },
+    {
+      "id": "ww-translate",
+      "aliases": [
+        "worldwarp-translation",
+        "原版左移"
+      ],
+      "kind": "video",
+      "name": "WorldWarp 原版匀速左平移",
+      "geometry": "TTT3R -> WorldWarp native GS",
+      "motion": "truck-left",
+      "context_frames": 1,
+      "strength": 0.6,
+      "full_capture": false,
+      "historical_evidence": "bedroom constant left translation, 2026-09-07",
+      "environments": [
+        "worldwarp"
+      ]
+    },
+    {
+      "id": "map-ww-gs",
+      "aliases": [
+        "F",
+        "rolling_gs",
+        "滚动GS"
+      ],
+      "kind": "video",
+      "name": "MapAnything 滚动历史 + WorldWarp 原生 GS",
+      "geometry": "MapAnything -> WorldWarp native GS",
+      "variant": "rolling_gs",
+      "motion": "pan-left",
+      "context_frames": 5,
+      "strength": 0.6,
+      "full_capture": true,
+      "historical_evidence": "classroom F, 2026-09-08 and 2026-09-14",
+      "environments": [
+        "worldwarp",
+        "mapanything"
+      ]
+    },
+    {
+      "id": "map-ww-anchor-gs",
+      "aliases": [
+        "G",
+        "anchor_gs",
+        "原图约束GS"
+      ],
+      "kind": "video",
+      "name": "MapAnything 原图 + 历史 + WorldWarp 原生 GS",
+      "geometry": "MapAnything -> WorldWarp native GS",
+      "variant": "anchor_gs",
+      "motion": "pan-left",
+      "context_frames": 5,
+      "strength": 0.6,
+      "full_capture": true,
+      "historical_evidence": "classroom G, 2026-09-08 and 2026-09-14",
+      "environments": [
+        "worldwarp",
+        "mapanything"
+      ]
+    },
+    {
+      "id": "map-ww-anchor-points",
+      "aliases": [
+        "H",
+        "anchor_points",
+        "原图约束点云"
+      ],
+      "kind": "video",
+      "name": "MapAnything 原图 + 历史 + 点云投影 + WorldWarp",
+      "geometry": "MapAnything -> bilinear point splatting",
+      "variant": "anchor_points",
+      "motion": "pan-left",
+      "context_frames": 5,
+      "strength": 0.6,
+      "full_capture": true,
+      "historical_evidence": "classroom H, 2026-09-08 and 2026-09-14",
+      "environments": [
+        "worldwarp",
+        "mapanything"
+      ]
+    },
+    {
+      "id": "map-game-ww",
+      "aliases": [
+        "B",
+        "三项目原始"
+      ],
+      "kind": "video",
+      "name": "MapAnything -> GaME 固定场景 -> WorldWarp，ctx1",
+      "geometry": "MapAnything -> static GaME scene",
+      "motion": "pan-left",
+      "context_frames": 1,
+      "strength": 0.6,
+      "full_capture": false,
+      "historical_evidence": "classroom B, 2026-09-07; unified entry uses shared context wrapper at context=1",
+      "environments": [
+        "worldwarp",
+        "mapanything",
+        "game"
+      ]
+    },
+    {
+      "id": "map-game-ww-ctx5",
+      "aliases": [
+        "C",
+        "三项目五帧上下文"
+      ],
+      "kind": "video",
+      "name": "MapAnything -> GaME 固定场景 -> WorldWarp，ctx5",
+      "geometry": "MapAnything -> static GaME scene",
+      "motion": "pan-left",
+      "context_frames": 5,
+      "strength": 0.6,
+      "full_capture": false,
+      "historical_evidence": "classroom C, 2026-09-08",
+      "environments": [
+        "worldwarp",
+        "mapanything",
+        "game"
+      ]
+    },
+    {
+      "id": "map-game-ww-s050",
+      "aliases": [
+        "D",
+        "三项目低强度"
+      ],
+      "kind": "video",
+      "name": "GaME 固定场景 + WorldWarp，strength .50, ctx1",
+      "geometry": "MapAnything -> static GaME scene",
+      "motion": "pan-left",
+      "context_frames": 1,
+      "strength": 0.5,
+      "full_capture": false,
+      "historical_evidence": "classroom D, 2026-09-08",
+      "environments": [
+        "worldwarp",
+        "mapanything",
+        "game"
+      ]
+    },
+    {
+      "id": "map-game-ww-s065",
+      "aliases": [
+        "E",
+        "三项目高强度"
+      ],
+      "kind": "video",
+      "name": "GaME 固定场景 + WorldWarp，strength .65, ctx1",
+      "geometry": "MapAnything -> static GaME scene",
+      "motion": "pan-left",
+      "context_frames": 1,
+      "strength": 0.65,
+      "full_capture": false,
+      "historical_evidence": "classroom E, 2026-09-08",
+      "environments": [
+        "worldwarp",
+        "mapanything",
+        "game"
+      ]
+    },
+    {
+      "id": "mapanything",
+      "aliases": [
+        "估深",
+        "geometry"
+      ],
+      "kind": "geometry",
+      "name": "MapAnything 图像组 -> RGB-D / 点图 / 点云",
+      "geometry": "MapAnything",
+      "full_capture": false,
+      "historical_evidence": "geometry installation and classroom/fixtures, 2026-09-06/07",
+      "environments": [
+        "mapanything"
+      ]
+    },
+    {
+      "id": "mapanything-game",
+      "aliases": [
+        "静态建模",
+        "geometry-game"
+      ],
+      "kind": "geometry",
+      "name": "MapAnything 图像组 -> GaME 静态 GS",
+      "geometry": "MapAnything -> static GaME scene",
+      "full_capture": false,
+      "historical_evidence": "static RGB-D GaME adapter, 2026-09-06/07",
+      "environments": [
+        "mapanything",
+        "game"
+      ]
+    }
+  ]
+}
