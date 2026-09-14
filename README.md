@@ -1,4 +1,4 @@
-# GIL_atlas
+# jiaiL_atlas
 
 把本地部署的 **WorldWarp、MapAnything、GaME** 及它们之间实际跑过的推理适配器放在一个仓库中。三个项目都是普通源码目录，包括所需的子模块源码；克隆本仓库后无需 `git submodule update`。上游来源、固定提交及本地改动记录在 [docs/upstream_sources.json](docs/upstream_sources.json)，版权声明和已有许可证保留。
 
