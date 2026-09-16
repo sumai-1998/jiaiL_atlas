@@ -74,6 +74,7 @@ python scripts/pipelines.py run --pipeline mapanything-game \
 
 ## 文档与验证
 
+- [工作记录：基线评测、组合实验与后续进度](sumai-work-log.md)
 - [管线、参数和自然语言调用说明](docs/PIPELINES.md)
 - [AI 工具执行规范](AGENTS.md)
 - [环境、权重和可迁移路径](docs/ENVIRONMENT.md)

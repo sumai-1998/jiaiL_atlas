@@ -122,5 +122,42 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(command[command.index('--prompt')+1],prompt)
         self.assertEqual(command[command.index('--image')+1],str(self.image))
 
+    def test_shared_runtime_caches_are_separate_and_weights_stay_shared(self):
+        cache=self.root/'private cache'
+        with mock.patch.dict(os.environ,{'GIL_RUNTIME_CACHE':str(cache)}):
+            ww=cli.stage_env('worldwarp','3');ma=cli.stage_env('mapanything','3')
+        for key in ('TORCH_EXTENSIONS_DIR','TORCHINDUCTOR_CACHE_DIR','TRITON_CACHE_DIR',
+                    'CUDA_CACHE_PATH','HF_MODULES_CACHE','MPLCONFIGDIR'):
+            self.assertNotEqual(ww[key],ma[key])
+            self.assertTrue(Path(ww[key]).is_relative_to(cache/'worldwarp'))
+            self.assertTrue(Path(ma[key]).is_relative_to(cache/'mapanything'))
+            self.assertEqual(Path(ww[key]).stat().st_mode & 0o777,0o700)
+        self.assertEqual(ww['HF_HOME'],str(cli.ROOT/'hf_cache'))
+        self.assertEqual(ma['TORCH_HOME'],str(cli.ROOT/'.cache/torch_geometry'))
+
+    def test_doctor_rejects_existing_unreadable_weight(self):
+        plan=cli.build_plan(self.args('A'))
+        weight=self.root/'WorldWarp/src/ttt3r/cut3r_512_dpt_4_64.pth'
+        weight.parent.mkdir(parents=True);weight.write_bytes(b'fixture')
+        access=os.access
+        with mock.patch.object(cli,'ROOT',self.root):
+            before=next(c for c in cli.preflight(plan) if c['check']=='TTT3R weight')
+            self.assertTrue(before['ok'])
+            with mock.patch.object(cli.os,'access',side_effect=lambda p,m: False if Path(p)==weight else access(p,m)):
+                after=next(c for c in cli.preflight(plan) if c['check']=='TTT3R weight')
+            self.assertFalse(after['ok'])
+
+    def test_shared_launcher_preserves_caller_paths_and_literal_prompt(self):
+        prompt='Preserve $(literal) and `literal` characters.'
+        result=subprocess.run(['bash',str(cli.ROOT/'scripts/shared_pipeline.sh'),'plan',
+            '--pipeline','G','--input',self.image.name,'--output','my output',
+            '--prompt',prompt],cwd=self.root,env={**os.environ,'GIL_WORLDWARP_PYTHON':sys.executable},
+            text=True,capture_output=True,check=True)
+        plan=json.loads(result.stdout)
+        self.assertEqual(plan['inputs'],[str(self.image)])
+        self.assertEqual(plan['output'],str(self.root/'my output'))
+        self.assertEqual(plan['prompt'],prompt)
+        self.assertFalse((self.root/'my output').exists())
+
 
 if __name__=='__main__':unittest.main()

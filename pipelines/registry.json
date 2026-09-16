@@ -1,5 +1,21 @@
 {
   "schema_version": 1,
+  "benchmarks": [
+    {
+      "id": "ww-dl3dv-benchmark",
+      "command": "python scripts/pipelines.py benchmark {plan,doctor,run} --manifest INVENTORY.json --count 3 --output NEW_RUN --gpu GPU_ID",
+      "purpose": "WorldWarp paper-based local DL3DV pilot with held-out image scoring",
+      "input_format": "Audited inventory of pixelSplat torch scenes, at least 225 frames each",
+      "resolution_wh": [720, 480],
+      "chunk_frames": 49,
+      "overlap_after_first": 5,
+      "chunks": 5,
+      "delivered_frames": 225,
+      "strength": 0.8,
+      "metrics": ["PSNR", "SSIM", "LPIPS", "FID (small-sample diagnostic)", "DUSt3R R_dist", "DUSt3R t_dist"],
+      "official_reproduction": false
+    }
+  ],
   "video_contract": {
     "width": 480,
     "height": 608,

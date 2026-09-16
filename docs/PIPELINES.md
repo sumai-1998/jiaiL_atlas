@@ -2,6 +2,8 @@
 
 本文件说明当前可执行入口；历史来源见 [EXPERIMENTS.md](EXPERIMENTS.md)。机器读取 [registry.json](../pipelines/registry.json)，人或 AI 调用 `python scripts/pipelines.py`。
 
+其他 Linux 账号复用本机安装时，使用 `bash /共享项目路径/scripts/shared_pipeline.sh` 加相同子命令和参数；见 [SHARED_USE.md](SHARED_USE.md)。该入口隔离个人运行缓存，模型参数保持一致。
+
 ## 1. 发现与执行接口
 
 | 子命令 | 行为 | 是否加载模型 |
@@ -12,8 +14,19 @@
 | `doctor`，参数同 plan | 检查解释器、权重路径、ffmpeg / ffprobe | 否 |
 | `run`，参数同 plan，另需 `--gpu` | 按计划串行执行阶段，记录日志和状态 | 是 |
 | `status RUN_DIR` | 读取运行状态 JSON | 否 |
+| `benchmark plan/doctor/run --manifest INVENTORY.json --count 3 --output NEW_RUN --gpu GPU_ID` | DL3DV 真实轨迹、论文配置的本地 WorldWarp 评测 | 仅 run 加载 |
 
 同一项目的模型依赖可能需要特定 Python / PyTorch / CUDA，不把三个项目强行塞进一个环境。每个阶段选择相应解释器；F/G/H 的视频进程内部会用 MapAnything 解释器估几何。运行过程在 `logs/worldwarp.log` 和 `video/geometry/chunk_NNN/mapanything.log` 可追踪。
+
+### DL3DV 本地评测入口
+
+`benchmark` 是独立契约，不修改 A–H 的 321 帧配置。它使用原版 WorldWarp：TTT3R → 原生 GS → 扩散；5 段 49 帧、后续重叠 5 帧，共 225 帧，720×480，strength 0.8、GS 500 步、采样 50 步、CFG 5、seed 32。按补充材料 §7 先从参考视频估计控制相机，生成阶段仅使用第一张真实图及生成历史；参考视频深度不能用于生成。
+
+输入为已审计的场景清单，当前读取 pixelSplat `.torch` 格式，按 scene ID 排序取前 `count` 个场景；每场景需至少 225 帧，按时间戳排序取前 225 帧。不支持把不完整场景静默跳过或混入训练图片。首图计为第 1 帧，端点评测第 50 / 200 帧。保存 PNG、两种相机、逐帧图像指标、独立 DUSt3R 位姿、并排视频和自包含 README。3 场景 FID 只能作诊断；这不是 WorldWarp 官方划分或官方分数复现。
+
+指定场景时，先把所选条目完整复制到独立清单的 `scenes` 数组，保留原 `scene_id`、`format`、`shard_path`、`frames` 等字段，可用 `selection_description` 记录选取理由；再把 `--manifest` 指向该清单，`--count` 设为实际场景数（至少 2）。输出报告保存所选清单及相应复跑命令，避免误跑回原清单的前三个场景。
+
+指标依赖用 `scripts/worldwarp_benchmark_constraints.txt` 约束安装，避免升级 NumPy 破坏原 CUDA 扩展 ABI。另需独立官方 DUSt3R 源码（含 CroCo），用 `--dust3r-root` 指定；默认本机 `/data4/sumai/eval_tools/dust3r`，权重 `checkpoints/dust3r/DUSt3R_ViTLarge_BaseDecoder_512_dpt.pth`，以及 LPIPS / Inception 缓存。源码与权重均不提交本仓库。`doctor` 仍只是路径检查，完整推理验收以运行状态和报告为准。
 
 ## 2. 三类视频几何来源
 

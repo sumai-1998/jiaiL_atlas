@@ -39,6 +39,21 @@ def stage_env(name,gpu):
                HF_HUB_DISABLE_TELEMETRY='1',OMP_NUM_THREADS='4',OPENBLAS_NUM_THREADS='4',MAX_JOBS='4',
                WANDB_MODE='disabled',TOKENIZERS_PARALLELISM='false',
                GIL_MAPANYTHING_PYTHON=python_for('mapanything'))
+    # Shared model caches stay read-only. JIT/runtime caches must be writable
+    # by the caller and separated across the three Python/PyTorch environments.
+    if env.get('GIL_RUNTIME_CACHE'):
+        runtime=Path(env['GIL_RUNTIME_CACHE']).expanduser().resolve()/name
+        for key,folder in {
+            'TORCH_EXTENSIONS_DIR':'torch_extensions',
+            'TORCHINDUCTOR_CACHE_DIR':'torch_inductor',
+            'TRITON_CACHE_DIR':'triton',
+            'CUDA_CACHE_PATH':'cuda',
+            'HF_MODULES_CACHE':'hf_modules',
+            'MPLCONFIGDIR':'matplotlib',
+        }.items():
+            cache=runtime/folder
+            cache.mkdir(parents=True,exist_ok=True,mode=0o700)
+            env[key]=str(cache)
     default='/usr/local/cuda-12.8' if name=='worldwarp' else '/usr/local/cuda-12.4'
     cuda=Path(os.environ.get('GIL_CUDA_'+name.upper(),default))
     if cuda.is_dir():
@@ -135,7 +150,11 @@ def build_plan(args):
 
 def preflight(plan):
     p=plan['pipeline_definition'];checks=[]
-    def add(label,path):checks.append(dict(check=label,path=str(path),ok=Path(path).exists()))
+    def add(label,path):
+        path=Path(path)
+        access=os.R_OK | (os.X_OK if path.is_dir() or label.endswith(' Python') else 0)
+        checks.append(dict(check=label,path=str(path),ok=path.exists() and os.access(path,access),
+                           required_access='read+execute' if access & os.X_OK else 'read'))
     for env in p['environments']:add(env+' Python',python_for(env))
     if 'worldwarp' in p['environments']:
         for path in ['WorldWarp/ckpt/worldwarp_latest.ckpt','WorldWarp/ckpt/Wan-AI/Wan2.1-T2V-1.3B-Diffusers/model_index.json']:
@@ -146,6 +165,14 @@ def preflight(plan):
     if 'mapanything' in p['environments']:
         variant=plan['parameters']['map_variant'] if p['kind']=='geometry' else 'default'
         add('MapAnything weight',ROOT/f'checkpoints/{"mapanything-apache" if variant=="apache" else "mapanything"}/model.safetensors')
+    if p['kind']=='benchmark':
+        dust=Path(plan['parameters']['dust3r_root'])
+        for label,path in [('DUSt3R source',dust/'dust3r/model.py'),('CroCo source',dust/'croco/models/croco.py'),
+            ('DUSt3R weight',ROOT/'checkpoints/dust3r/DUSt3R_ViTLarge_BaseDecoder_512_dpt.pth'),
+            ('Qwen captioner config',ROOT/'WorldWarp/ckpt/Qwen/Qwen2.5-VL-7B-Instruct/config.json'),
+            ('FID Inception cache',ROOT/'.cache/torch_geometry/hub/checkpoints/pt_inception-2015-12-05-6726825d.pth'),
+            ('LPIPS AlexNet cache',ROOT/'.cache/torch_geometry/hub/checkpoints/alexnet-owt-7be5be79.pth')]:
+            add(label,path)
     checks.append(dict(check='ffmpeg',ok=shutil.which('ffmpeg') is not None))
     checks.append(dict(check='ffprobe',ok=shutil.which('ffprobe') is not None))
     return checks
@@ -153,6 +180,18 @@ def preflight(plan):
 
 def verify_outputs(plan):
     out=Path(plan['output']);p=plan['pipeline_definition']
+    if p['kind']=='benchmark':
+        results=json.loads((out/'metrics_summary.json').read_text())
+        if results.get('status')!='complete':raise RuntimeError('Benchmark metrics are incomplete')
+        probes=[]
+        for scene in plan['inputs']:
+            video=out/scene['scene_id'][:12]/'generated.mp4'
+            info=json.loads(subprocess.check_output(['ffprobe','-v','error','-count_frames','-select_streams','v:0',
+                '-show_entries','stream=nb_read_frames,r_frame_rate,width,height,duration','-of','json',str(video)]))['streams'][0]
+            if (int(info['nb_read_frames']),info['width'],info['height'],info['r_frame_rate'])!=(225,720,480,'30/1'):
+                raise RuntimeError(f'Benchmark video mismatch: {info}')
+            probes.append(dict(video=str(video),probe=info))
+        return dict(report=str(out/'README.md'),metrics=str(out/'metrics_summary.json'),videos=probes)
     if p['kind']=='video':
         report=json.loads((out/'video/report.json').read_text())
         if report.get('status')!='complete':raise RuntimeError('Video report is not complete')
@@ -211,6 +250,13 @@ def parser():
     subs.add_parser('list',help='Machine-readable pipeline registry')
     q=subs.add_parser('describe');q.add_argument('pipeline')
     q=subs.add_parser('status');q.add_argument('output',type=Path)
+    q=subs.add_parser('benchmark',help='Local DL3DV evaluation using the WorldWarp paper protocol')
+    q.add_argument('benchmark_action',choices=['plan','doctor','run'])
+    q.add_argument('--manifest',type=Path,required=True,help='Audited scene inventory JSON')
+    q.add_argument('--count',type=int,default=3)
+    q.add_argument('--output',required=True)
+    q.add_argument('--gpu')
+    q.add_argument('--dust3r-root',default='/data4/sumai/eval_tools/dust3r')
     for action in ['plan','run','doctor']:
         q=subs.add_parser(action)
         q.add_argument('--pipeline',required=True)
@@ -239,9 +285,16 @@ def main(argv=None):
     p=parser();a=p.parse_args(argv)
     try:
         if a.action=='list':emit(REGISTRY);return 0
-        if a.action=='describe':emit(resolve_pipeline(a.pipeline));return 0
+        if a.action=='describe':
+            benchmark=next((b for b in REGISTRY.get('benchmarks',[]) if b['id'].casefold()==a.pipeline.casefold()),None)
+            emit(benchmark if benchmark is not None else resolve_pipeline(a.pipeline));return 0
         if a.action=='status':emit(json.loads((a.output/'status.json').read_text()));return 0
-        plan=build_plan(a)
+        if a.action=='benchmark':
+            from worldwarp_benchmark import build_plan as benchmark_plan
+            if a.count<1:raise ValueError('--count must be positive')
+            if a.gpu is not None and not re.fullmatch(r'(\d+|GPU-[A-Za-z0-9-]+)',a.gpu):raise ValueError('Invalid GPU identifier')
+            plan=benchmark_plan(a);a.action=a.benchmark_action
+        else:plan=build_plan(a)
         if a.action=='plan':emit(plan);return 0
         if a.action=='doctor':
             checks=preflight(plan);ok=all(x['ok'] for x in checks)

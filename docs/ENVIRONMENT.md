@@ -1,5 +1,7 @@
 # 环境、权重与目录迁移
 
+同一服务器的其他 Linux 用户直接复用现有安装，见 [多用户使用说明](SHARED_USE.md)。入口为 `bash scripts/shared_pipeline.sh ...`，运行结果放在各自目录。
+
 统一命令把三个已部署项目连接起来，不包含预训练权重或可搬到任意系统运行的 CUDA 二进制。原服务器是 Linux / NVIDIA RTX A6000。当前安装版本从三个解释器读取，见 [environment_snapshot.json](environment_snapshot.json)。
 
 | 环境 | Python | PyTorch | NumPy | 主要用途 |

@@ -1,0 +1,8 @@
+# Keep WorldWarp's binary extension ABI while installing evaluation utilities.
+numpy==1.26.4
+torch==2.7.1
+torchvision==0.22.1
+lpips==0.1.4
+pytorch-fid==0.3.0
+scikit-image==0.25.2
+tifffile==2025.5.10
