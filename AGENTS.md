@@ -42,6 +42,8 @@ python scripts/pipelines.py status runs/UNIQUE_RUN
 ## 必须保持准确的契约
 
 - 视频标准配置为 **4 段合计 10.7 秒**，不是 4×10.7 秒。若用户明确要 42.8 秒，当前统一入口不支持，必须说明并实现 / 验证扩展后才能交付，不能偷偷改为 10.7 秒。
+- DL3DV 的 `benchmark` 子命令是独立评测契约：225 帧、720×480、5 段、strength .8、后续上下文 5。原版为 `--method worldwarp`；三项目配对评测为 `--method map-game-ww --baseline-runs ...`，复用同组基线图像 / 相机，只用首图建固定 GaME 场景并校准深度尺度。其 SE3 轨迹支持不扩展到普通 A–H 入口，不得混称历史 B .6/ctx1；具体方法及验证记录见 `docs/PIPELINES.md` 和 `sumai-work-log.md`。
+- F/G/H 的独立 DL3DV 评测已接入 `benchmark --method map-ww-gs / map-ww-anchor-gs / map-ww-anchor-points --baseline-runs ...`：225 帧、SE3、.8；几何关键帧为局部 0/12/24/36/48。首图单独 TTT3R 仅校准全局深度单位，后续几何为 MapAnything；不把此适配称为旧 classroom 配置。精简存储时先完成无损评分与核验，再清理本次运行的 PNG / 大型中间文件，保留数值、配置和日志。
 - 默认 480×608、30 fps、50 步采样、CFG 5、seed 32，匀速左转总角度 −20°。A/B/D/E 上下文 1，F/G/H 和 C 上下文 5。D/E 历史上只改变 strength，不能默默换成 ctx5。
 - 5 个均匀历史关键帧用于几何，5 个连续末尾帧用于视频上下文；它们不是同一组选帧。
 - G/F 每段重新估几何、重新拟合原生 GS。没有跨段持久的 GaME 全局地图。H 不做 GS 优化。

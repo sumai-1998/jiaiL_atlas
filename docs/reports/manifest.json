@@ -1,0 +1,309 @@
+{
+  "date": "2026-09-23",
+  "policy": "Move standalone authored reports; copy artifact Markdown while preserving original self-contained media packages. Keep operational docs and work log in place.",
+  "documents": [
+    {
+      "action": "move",
+      "old": "docs/research/GAE_架构与借鉴分析_2026-09-22.md",
+      "new": "docs/reports/research/GAE_架构与借鉴分析_2026-09-22.md"
+    },
+    {
+      "action": "move",
+      "old": "docs/research/静态GS世界闭环_可行性与实施方案_2026-09-22.md",
+      "new": "docs/reports/research/静态GS世界闭环_可行性与实施方案_2026-09-22.md"
+    },
+    {
+      "action": "move",
+      "old": "docs/research/世界模型_核心机理与研究定位报告_2026-09-22.md",
+      "new": "docs/reports/research/世界模型_核心机理与研究定位报告_2026-09-22.md"
+    },
+    {
+      "action": "move",
+      "old": "docs/research/WorldCrafter_架构与借鉴分析_2026-09-22.md",
+      "new": "docs/reports/research/WorldCrafter_架构与借鉴分析_2026-09-22.md"
+    },
+    {
+      "action": "move",
+      "old": "docs/WORLDWARP_DETAILED_WORKFLOW.md",
+      "new": "docs/reports/technical/WORLDWARP_DETAILED_WORKFLOW.md"
+    },
+    {
+      "action": "move",
+      "old": "docs/WORLDWARP_PIPELINE_EVALUATION_SUMMARY.md",
+      "new": "docs/reports/technical/WORLDWARP_PIPELINE_EVALUATION_SUMMARY.md"
+    },
+    {
+      "action": "move",
+      "old": "WorldWarp_单GT首帧到类Atlas闭环_完整流程_2026-09-14.md",
+      "new": "docs/reports/research/WorldWarp_单GT首帧到类Atlas闭环_完整流程_2026-09-14.md"
+    },
+    {
+      "action": "move",
+      "old": "WorldWarp_类Atlas流程_小研究课题与模块替代路线_2026-09-14.md",
+      "new": "docs/reports/research/WorldWarp_类Atlas流程_小研究课题与模块替代路线_2026-09-14.md"
+    },
+    {
+      "action": "move",
+      "old": "ATLAS_REVIEW_2026-09-06.md",
+      "new": "docs/reports/archive/ATLAS_REVIEW_2026-09-06.md"
+    },
+    {
+      "action": "move",
+      "old": "ATLAS_REVIEW_V3_2026-09-06.md",
+      "new": "docs/reports/archive/ATLAS_REVIEW_V3_2026-09-06.md"
+    },
+    {
+      "action": "move",
+      "old": "ATLAS_OPEN_SOURCE_ASSEMBLY_2026-09-06.md",
+      "new": "docs/reports/archive/ATLAS_OPEN_SOURCE_ASSEMBLY_2026-09-06.md"
+    },
+    {
+      "action": "move",
+      "old": "OPEN_SOURCE_COMPONENT_UPDATE_2026-09-05.md",
+      "new": "docs/reports/archive/OPEN_SOURCE_COMPONENT_UPDATE_2026-09-05.md"
+    },
+    {
+      "action": "move",
+      "old": "WORLDWARP_SETUP.md",
+      "new": "docs/reports/archive/WORLDWARP_SETUP.md"
+    },
+    {
+      "action": "move",
+      "old": "GEOMETRY_SETUP.md",
+      "new": "docs/reports/archive/GEOMETRY_SETUP.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "Reports/dl3dv_worldwarp_recheck_20260918/README.md",
+      "new": "docs/reports/experiments/dl3dv_worldwarp_recheck_20260918/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "Reports/dl3dv_FGH_eval5_2026-09-17_225018/README.md",
+      "new": "docs/reports/experiments/dl3dv_FGH_eval5_2026-09-17_225018/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "Reports/dl3dv_map_game_ww_eval5_2026-09-16_174900/README.md",
+      "new": "docs/reports/experiments/dl3dv_map_game_ww_eval5_2026-09-16_174900/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "Reports/dl3dv_map_game_ww_eval5_2026-09-16_174900/hybrid_details.md",
+      "new": "docs/reports/experiments/dl3dv_map_game_ww_eval5_2026-09-16_174900/hybrid_details.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "Reports/dl3dv_worldwarp_eval3_2026-09-16_112915/README.md",
+      "new": "docs/reports/experiments/dl3dv_worldwarp_eval3_2026-09-16_112915/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "Reports/dl3dv_camera_audit_20260918/README.md",
+      "new": "docs/reports/experiments/dl3dv_camera_audit_20260918/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "Reports/dl3dv_baseline_audit_20260921/README.md",
+      "new": "docs/reports/experiments/dl3dv_baseline_audit_20260921/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "Reports/classroom_system_walkthrough_2026-09-14/README.md",
+      "new": "docs/reports/experiments/classroom_system_walkthrough_2026-09-14/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "Reports/dl3dv_statue_tuning_20260921/README.md",
+      "new": "docs/reports/experiments/dl3dv_statue_tuning_20260921/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "Reports/dataset_inventory_2026-09-15/README.md",
+      "new": "docs/reports/experiments/dataset_inventory_2026-09-15/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "Reports/dataset_inventory_2026-09-15/verification_2026-09-16.md",
+      "new": "docs/reports/experiments/dataset_inventory_2026-09-15/verification_2026-09-16.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "Reports/dl3dv_worldwarp_eval2_2026-09-16_142500/README.md",
+      "new": "docs/reports/experiments/dl3dv_worldwarp_eval2_2026-09-16_142500/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "runs/dl3dv_worldwarp_recheck_20260918_1438/README.md",
+      "new": "docs/reports/runs/dl3dv_worldwarp_recheck_20260918_1438/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "runs/dl3dv_map_game_ww_eval5_20260916_174900/README.md",
+      "new": "docs/reports/runs/dl3dv_map_game_ww_eval5_20260916_174900/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "runs/dl3dv_F_eval5_20260917_225018/README.md",
+      "new": "docs/reports/runs/dl3dv_F_eval5_20260917_225018/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "runs/dl3dv_worldwarp_eval3_20260916_112915/README.md",
+      "new": "docs/reports/runs/dl3dv_worldwarp_eval3_20260916_112915/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "runs/dl3dv_statue_s035_20260921/README.md",
+      "new": "docs/reports/runs/dl3dv_statue_s035_20260921/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "runs/dl3dv_statue_s050_20260921/README.md",
+      "new": "docs/reports/runs/dl3dv_statue_s050_20260921/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "runs/dl3dv_G_eval5_20260917_225018/README.md",
+      "new": "docs/reports/runs/dl3dv_G_eval5_20260917_225018/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "runs/dl3dv_worldwarp_calibrated_diagnostic_20260918_1443/README.md",
+      "new": "docs/reports/runs/dl3dv_worldwarp_calibrated_diagnostic_20260918_1443/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "runs/dl3dv_worldwarp_eval2_20260916_142500/README.md",
+      "new": "docs/reports/runs/dl3dv_worldwarp_eval2_20260916_142500/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "runs/dl3dv_H_eval5_20260917_225018/README.md",
+      "new": "docs/reports/runs/dl3dv_H_eval5_20260917_225018/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "WorldWarp_outputs/bedroom_truck_left_2026-09-07/README.md",
+      "new": "docs/reports/classroom-bedroom/bedroom_truck_left_2026-09-07/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "WorldWarp_outputs/classroom_all_comparison_2026-09-08/README.md",
+      "new": "docs/reports/classroom-bedroom/classroom_all_comparison_2026-09-08/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "WorldWarp_outputs/classroom_hybrid_tuning_2026-09-08/README.md",
+      "new": "docs/reports/classroom-bedroom/classroom_hybrid_tuning_2026-09-08/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "WorldWarp_outputs/classroom_pan_left_2026-09-07/README.md",
+      "new": "docs/reports/classroom-bedroom/classroom_pan_left_2026-09-07/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "WorldWarp_outputs/classroom_intermediates_2026-09-14/README.md",
+      "new": "docs/reports/classroom-bedroom/classroom_intermediates_2026-09-14/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "WorldWarp_outputs/classroom_worldwarp_mapanything_2026-09-08/README.md",
+      "new": "docs/reports/classroom-bedroom/classroom_worldwarp_mapanything_2026-09-08/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "WorldWarp_outputs/classroom_history_2026-09-08/README.md",
+      "new": "docs/reports/classroom-bedroom/classroom_history_2026-09-08/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "WorldWarp_outputs/classroom_hybrid_pan_left_2026-09-07/README.md",
+      "new": "docs/reports/classroom-bedroom/classroom_hybrid_pan_left_2026-09-07/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "presentations/atlas_four_chapter_polished_2026-09-07/WorldWarp_本地部署与演示.md",
+      "new": "docs/reports/presentations/atlas_four_chapter_polished_2026-09-07/WorldWarp_本地部署与演示.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "presentations/atlas_four_chapter_polished_2026-09-07/逐页讲稿.md",
+      "new": "docs/reports/presentations/atlas_four_chapter_polished_2026-09-07/逐页讲稿.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "presentations/atlas_four_chapter_polished_2026-09-07/README.md",
+      "new": "docs/reports/presentations/atlas_four_chapter_polished_2026-09-07/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "presentations/atlas_hypothesis_first_2026-09-07/逐页讲稿.md",
+      "new": "docs/reports/presentations/atlas_hypothesis_first_2026-09-07/逐页讲稿.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "presentations/atlas_hypothesis_first_2026-09-07/三个项目_当前能力与替换范围.md",
+      "new": "docs/reports/presentations/atlas_hypothesis_first_2026-09-07/三个项目_当前能力与替换范围.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "presentations/atlas_hypothesis_first_2026-09-07/README.md",
+      "new": "docs/reports/presentations/atlas_hypothesis_first_2026-09-07/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "presentations/atlas_framework_reproduction_2026-09-06/讲解备注.md",
+      "new": "docs/reports/presentations/atlas_framework_reproduction_2026-09-06/讲解备注.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "presentations/atlas_framework_reproduction_2026-09-06/README.md",
+      "new": "docs/reports/presentations/atlas_framework_reproduction_2026-09-06/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "presentations/atlas_framework_projects_2026-09-07/逐页讲稿.md",
+      "new": "docs/reports/presentations/atlas_framework_projects_2026-09-07/逐页讲稿.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "presentations/atlas_framework_projects_2026-09-07/三个项目_当前能力与替换范围.md",
+      "new": "docs/reports/presentations/atlas_framework_projects_2026-09-07/三个项目_当前能力与替换范围.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "presentations/atlas_framework_projects_2026-09-07/README.md",
+      "new": "docs/reports/presentations/atlas_framework_projects_2026-09-07/README.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "presentations/atlas_framework_clear_2026-09-07/逐页讲稿.md",
+      "new": "docs/reports/presentations/atlas_framework_clear_2026-09-07/逐页讲稿.md"
+    },
+    {
+      "action": "copy_markdown",
+      "old": "presentations/atlas_framework_clear_2026-09-07/README.md",
+      "new": "docs/reports/presentations/atlas_framework_clear_2026-09-07/README.md"
+    }
+  ],
+  "inbound_link_updates": [
+    "README.md",
+    "sumai-work-log.md",
+    "docs/PIPELINES.md",
+    "docs/ENVIRONMENT.md",
+    "presentations/atlas_four_chapter_polished_2026-09-07/WorldWarp_本地部署与演示.md",
+    "presentations/atlas_four_chapter_polished_2026-09-07/逐页讲稿.md",
+    "presentations/atlas_four_chapter_polished_2026-09-07/README.md",
+    "presentations/atlas_hypothesis_first_2026-09-07/逐页讲稿.md",
+    "presentations/atlas_hypothesis_first_2026-09-07/三个项目_当前能力与替换范围.md",
+    "presentations/atlas_hypothesis_first_2026-09-07/README.md",
+    "presentations/atlas_framework_reproduction_2026-09-06/讲解备注.md",
+    "presentations/atlas_framework_projects_2026-09-07/逐页讲稿.md",
+    "presentations/atlas_framework_projects_2026-09-07/三个项目_当前能力与替换范围.md",
+    "presentations/atlas_framework_projects_2026-09-07/README.md",
+    "presentations/atlas_framework_clear_2026-09-07/逐页讲稿.md",
+    "presentations/atlas_framework_clear_2026-09-07/README.md"
+  ]
+}

@@ -52,7 +52,7 @@ CUDA 编译环境默认 WorldWarp `/usr/local/cuda-12.8`，MapAnything/GaME `/us
 4. GaME 按 [上游依赖说明](../GaME/README.md)与 [本地约束](../scripts/geometry_constraints.txt)安装要求，编译 `GaME/submodules/{diff-gaussian-rasterization,flashsplat-rasterization,simple-knn}`。保留各子目录内的第三方源码和头文件。
 5. 下载权重和必要 Torch Hub / 指标缓存，随后运行路径检查、环境脚本和小规模 GPU 验证。不要直接用长视频代替安装排错。
 
-安装命令应在相应解释器内执行；不要在同一环境里交替安装三种 PyTorch 版本。原服务器的详细排错和 GPU 验收记录仍在 [WORLDWARP_SETUP.md](../WORLDWARP_SETUP.md)与 [GEOMETRY_SETUP.md](../GEOMETRY_SETUP.md)，其中绝对路径、历史输出和“当时空闲的 GPU”均为历史记录，需要换成新机器位置。
+安装命令应在相应解释器内执行；不要在同一环境里交替安装三种 PyTorch 版本。原服务器的详细排错和 GPU 验收记录仍在 [WORLDWARP_SETUP.md](reports/archive/WORLDWARP_SETUP.md)与 [GEOMETRY_SETUP.md](reports/archive/GEOMETRY_SETUP.md)，其中绝对路径、历史输出和“当时空闲的 GPU”均为历史记录，需要换成新机器位置。
 
 ## 模型来源
 

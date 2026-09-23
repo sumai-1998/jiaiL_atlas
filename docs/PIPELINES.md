@@ -20,13 +20,35 @@
 
 ### DL3DV 本地评测入口
 
+**2026-09-18 核查状态：**现有五场景运行有视角不匹配问题，尚未验收为可靠的论文基线复现。本地 `calibrate/generate` 直接使用逐帧 TTT3R K，遗漏上游参考视频入口的主点居中与内参时间平均；控制 K/位姿本身也与数据集标定存在偏差。现有原版/三项目/F/G/H 的分数须按[汇总文档中的更正](reports/technical/WORLDWARP_PIPELINE_EVALUATION_SUMMARY.md)解读。后续评测先核查相机、几何尺度、目标重投影和单段结果，再做批量比较；不能仅凭运行完成或 CPU 测试宣称相机控制正确。
+
 `benchmark` 是独立契约，不修改 A–H 的 321 帧配置。它使用原版 WorldWarp：TTT3R → 原生 GS → 扩散；5 段 49 帧、后续重叠 5 帧，共 225 帧，720×480，strength 0.8、GS 500 步、采样 50 步、CFG 5、seed 32。按补充材料 §7 先从参考视频估计控制相机，生成阶段仅使用第一张真实图及生成历史；参考视频深度不能用于生成。
 
 输入为已审计的场景清单，当前读取 pixelSplat `.torch` 格式，按 scene ID 排序取前 `count` 个场景；每场景需至少 225 帧，按时间戳排序取前 225 帧。不支持把不完整场景静默跳过或混入训练图片。首图计为第 1 帧，端点评测第 50 / 200 帧。保存 PNG、两种相机、逐帧图像指标、独立 DUSt3R 位姿、并排视频和自包含 README。3 场景 FID 只能作诊断；这不是 WorldWarp 官方划分或官方分数复现。
 
-指定场景时，先把所选条目完整复制到独立清单的 `scenes` 数组，保留原 `scene_id`、`format`、`shard_path`、`frames` 等字段，可用 `selection_description` 记录选取理由；再把 `--manifest` 指向该清单，`--count` 设为实际场景数（至少 2）。输出报告保存所选清单及相应复跑命令，避免误跑回原清单的前三个场景。
+指定场景时，先把所选条目完整复制到独立清单的 `scenes` 数组，保留原 `scene_id`、`format`、`shard_path`、`frames` 等字段，可用 `selection_description` 记录选取理由；再把 `--manifest` 指向该清单，`--count` 设为实际场景数（原版至少 1；端点 FID 至少 2）。输出报告保存所选清单及相应复跑命令，避免误跑回原清单的前三个场景。
+
+2026-09-18 起原版入口支持 `--count 1` 的单场景诊断；此时端点 FID 为 `null / N/A`，不得以一个样本的均值差冒充 FID，另保留全序列 FID 诊断。原版新运行默认 `--camera-intrinsics upstream-mean`，恢复上游主点居中与内参时间平均，同时保存 `reference_ttt3r_raw_cameras.npz`；历史行为可显式指定 `legacy-per-frame`。配对管线仍复用其基线相机，不自动改变旧结果。`--audit-guidance` 对原版保存每段请求相机、TTT3R 局部相机/首末深度、渲染视频和抽样无损 RGB/掩码，并逐张量核验实际加载的微调权重。该诊断不修改渲染或模型输出；修正后的生成质量仍须以新运行实测为准。
+
+2026-09-21 另提供 `--geometry-source first-image` 诊断：每段仅用真实首图重新拟合原生 GS，按同一全局目标相机渲染；生成历史只用于视频上下文和文本。它不是原版滚动几何，也不是持久融合。默认 `rolling` 不变；该选项仅原版视频后端可用，使用独立请求记录，不与 `--audit-guidance` 混用。
+
+2026-09-21 起原版 benchmark 支持 `--strength`，默认 .8；其他数值仅用于明确标记的调试，不是论文默认协议。该参数进入 plan、实际生成配置和报告复跑命令；配对方法不支持非 .8 值。
+
+`--camera-source dataset-calibrated` 是单独的排错协议：实际 K 与旋转采用数据集标定，相对首帧的平移仅拟合一个正的标量到参考 TTT3R 平移单位；不拟合旋转，不读取参考深度用于生成。实际控制保存为 `conditioning_cameras.npz`，TTT3R 预测另存原文件。它仍运行原生 WorldWarp 几何/扩散，但不等于论文使用 TTT3R 控制相机的配置。配对 F/G/H/GaME 入口暂不接受该诊断作为基线，以免误复用预测相机。
+
+这两种相机设置已在建筑与雕像完成单场景完整 GPU 重跑，但均未通过视觉对齐验收，不能称为已修复基线；详见[重验记录](../Reports/dl3dv_worldwarp_recheck_20260918/README.md)。执行状态和质量验收分别保存在 `status.json` 与 `quality_acceptance.json`。
 
 指标依赖用 `scripts/worldwarp_benchmark_constraints.txt` 约束安装，避免升级 NumPy 破坏原 CUDA 扩展 ABI。另需独立官方 DUSt3R 源码（含 CroCo），用 `--dust3r-root` 指定；默认本机 `/data4/sumai/eval_tools/dust3r`，权重 `checkpoints/dust3r/DUSt3R_ViTLarge_BaseDecoder_512_dpt.pth`，以及 LPIPS / Inception 缓存。源码与权重均不提交本仓库。`doctor` 仍只是路径检查，完整推理验收以运行状态和报告为准。
+
+三项目配对评测使用 `benchmark ... --method map-game-ww --baseline-runs BASELINE_RUN_1 BASELINE_RUN_2`，管线 ID 为 `map-game-ww-dl3dv-benchmark`。它按同一清单复用已完成原版基线的真实 PNG 和控制相机，保持 225 帧、720×480、strength .8、后续上下文 5；不等同于历史 B 的 .6/ctx1。MapAnything 只处理首图；额外用首图独立 TTT3R 深度的比值中位数校准一个全局尺度，禁止使用参考视频的诊断深度。GaME 以 720×480、500 步加原生 50 步预热拟合一次固定场景，完整 SE3 渲染使用原生 alpha；生成历史只进入视频上下文和 Qwen 描述，不更新地图。该扩展仅用于此评测入口，A–H 普通入口的运动与时长限制保持不变。新增适配的实际 GPU 验证进度见 `sumai-work-log.md`。
+
+### F/G/H 在同一 DL3DV 基线上的配对评测
+
+`benchmark ... --method map-ww-gs / map-ww-anchor-gs / map-ww-anchor-points --baseline-runs ...` 分别为 F/G/H。采用同组 225 帧、完整 SE3 相机、strength .8 和上述指标，普通 A–H 的纯旋转限制不因此改变。每段 49 帧中按局部 0/12/24/36/48 选历史几何视图，后续视频上下文则是连续末尾 44–48。G/H 额外保留原图、删除重复全局 0，原图权重 2；F 不加锚点。
+
+首段 MapAnything 与三项目评测采用相同首图适配器，并单独用首图 TTT3R / MapAnything 深度比中位数校准一个全局标量，所有后续 MapAnything 窗口沿用此标量；窗口间预测尺度漂移仍可能存在。不读取参考序列深度。生成器不加载 TTT3R，几何全部来自 MapAnything；TTT3R 仅在此前的首图尺度校准阶段运行。F/G 每段拟合原生 GS 500 步，用来源深度一致性阈值 .1 与 alpha 作为 SE3 条件；H 为逐来源 z-buffer / 双线性投影和加权 RGB 融合，不优化 GS。
+
+本轮按用户要求节约存储：渲染成功后删除当前段的大体积 RGB-D、GS checkpoint 和完整 RGB/alpha 数组，保留调用与来源哈希、相机、小型预览和日志；评分仍从编码前无损 PNG 计算，必须在指标、对比视频和核验完成后才能清理 PNG。此前已有实验不属于本次清理范围。实际 GPU 验证状态见工作记录。
 
 ## 2. 三类视频几何来源
 

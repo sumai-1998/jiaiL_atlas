@@ -257,6 +257,16 @@ def parser():
     q.add_argument('--output',required=True)
     q.add_argument('--gpu')
     q.add_argument('--dust3r-root',default='/data4/sumai/eval_tools/dust3r')
+    q.add_argument('--method',choices=['worldwarp','map-game-ww','map-ww-gs','map-ww-anchor-gs','map-ww-anchor-points'],default='worldwarp')
+    q.add_argument('--camera-intrinsics',choices=['upstream-mean','legacy-per-frame'],default='upstream-mean',
+                   help='WorldWarp reference K policy; paired methods reuse their baseline cameras')
+    q.add_argument('--audit-guidance',action='store_true',help='Original WorldWarp: save geometry/render diagnostics and verify loaded weights')
+    q.add_argument('--strength',type=float,default=.8,help='Original benchmark only: .8 is paper setting; other values are diagnostic tuning')
+    q.add_argument('--geometry-source',choices=['rolling','first-image'],default='rolling',help='first-image disables generated-history geometry; diagnostic only')
+    q.add_argument('--camera-source',choices=['ttt3r','dataset-calibrated'],default='ttt3r',
+                   help='Original WorldWarp only: reference estimator or explicitly separate calibrated-camera diagnostic')
+    q.add_argument('--baseline-runs',nargs='+',type=Path,default=[],
+                   help='Completed WorldWarp runs supplying the exact comparison scenes/cameras')
     for action in ['plan','run','doctor']:
         q=subs.add_parser(action)
         q.add_argument('--pipeline',required=True)
@@ -290,7 +300,16 @@ def main(argv=None):
             emit(benchmark if benchmark is not None else resolve_pipeline(a.pipeline));return 0
         if a.action=='status':emit(json.loads((a.output/'status.json').read_text()));return 0
         if a.action=='benchmark':
-            from worldwarp_benchmark import build_plan as benchmark_plan
+            if a.method != 'worldwarp' and (a.strength != .8 or a.geometry_source != 'rolling'):
+                raise ValueError('Benchmark strength tuning currently supports original WorldWarp only')
+            if a.method!='worldwarp' and (a.audit_guidance or a.camera_intrinsics!='upstream-mean' or a.camera_source!='ttt3r'):
+                raise ValueError('Camera policy/audit options are for original WorldWarp; paired methods reuse baseline cameras')
+            if a.method=='map-game-ww':
+                from worldwarp_hybrid_benchmark import build_plan as benchmark_plan
+            elif a.method.startswith('map-ww-'):
+                from worldwarp_rolling_benchmark import build_plan as benchmark_plan
+            else:
+                from worldwarp_benchmark import build_plan as benchmark_plan
             if a.count<1:raise ValueError('--count must be positive')
             if a.gpu is not None and not re.fullmatch(r'(\d+|GPU-[A-Za-z0-9-]+)',a.gpu):raise ValueError('Invalid GPU identifier')
             plan=benchmark_plan(a);a.action=a.benchmark_action

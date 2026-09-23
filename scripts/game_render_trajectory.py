@@ -17,6 +17,8 @@ def main():
     parser.add_argument("--rgbd", required=True)
     parser.add_argument("--trajectory", required=True)
     parser.add_argument("--output", required=True)
+    parser.add_argument("--motion-mode", choices=["rotation", "se3"], default="rotation",
+                        help="SE3 uses native GS visibility; rotation retains input-FOV clipping")
     args = parser.parse_args()
     import cv2
     import numpy as np
@@ -55,7 +57,8 @@ def main():
                  checkpoint_path=scene / "checkpoints/checkpoint.pth", all_train_data=[Dataset()])
     trajectory = np.load(args.trajectory)
     c2w, Ks = trajectory["c2w"], trajectory["intrinsics"]
-    assert np.allclose(c2w[:, :3, 3], source_c2w[:3, 3])
+    if args.motion_mode == 'rotation':
+        assert np.allclose(c2w[:, :3, 3], source_c2w[:3, 3])
     count = len(c2w)
     colors = np.lib.format.open_memmap(out / "warped_rgb.npy", mode="w+", dtype=np.float16,
                                        shape=(count, h, w, 3))
@@ -80,9 +83,10 @@ def main():
         alpha = prediction["alpha"].clamp(0, 1).squeeze().detach().cpu().numpy()
         alpha_raw = alpha.copy() if capture_all else None
         # For this pure rotation, clip Gaussian tails to the observed input FOV.
-        H = K @ pose[:3, :3].T @ source_c2w[:3, :3] @ np.linalg.inv(source_K)
-        support = cv2.warpPerspective(np.ones((h, w), np.uint8), H, (w, h), flags=cv2.INTER_NEAREST)
-        alpha *= support
+        if args.motion_mode == 'rotation':
+            H = K @ pose[:3, :3].T @ source_c2w[:3, :3] @ np.linalg.inv(source_K)
+            support = cv2.warpPerspective(np.ones((h, w), np.uint8), H, (w, h), flags=cv2.INTER_NEAREST)
+            alpha *= support
         if not np.isfinite(color).all() or not np.isfinite(alpha).all():
             raise RuntimeError(f"Non-finite GaME render at frame {idx}")
         colors[idx], alphas[idx] = color, alpha
@@ -93,7 +97,7 @@ def main():
                 frame_values['depth_z'] = prediction['depth'].detach().float().cpu().numpy()
             np.savez_compressed(out/'frames'/f'frame_{idx:03d}.npz', **frame_values)
             Image.fromarray(np.rint(color*255).astype(np.uint8)).save(out/'rgb_frames'/f'frame_{idx:03d}.png')
-        if idx in (0, 80, 160, 240, 320):
+        if idx in (0, 49, 99, 149, 199, count-1, 80, 160, 240, 320):
             Image.fromarray(np.rint(color * 255).astype(np.uint8)).save(out / f"render_{idx:03d}.png")
             Image.fromarray(np.rint(alpha * 255).astype(np.uint8)).save(out / f"alpha_{idx:03d}.png")
         row = dict(frame=idx, mean_alpha=float(alpha.mean()), valid_fraction=float((alpha >= 0.5).mean()))
@@ -105,11 +109,13 @@ def main():
         if idx % 40 == 0: print(json.dumps(row), flush=True)
     colors.flush()
     alphas.flush()
-    np.savez_compressed(out / "trajectory.npz", c2w=c2w, intrinsics=Ks, fps=trajectory["fps"])
+    np.savez_compressed(out / "trajectory.npz", c2w=c2w, intrinsics=Ks,
+                        fps=trajectory["fps"] if 'fps' in trajectory else 30)
     report = dict(project="GaME", scene=str(scene), rgbd=str(Path(args.rgbd).resolve()),
                   trajectory=str(Path(args.trajectory).resolve()), frames=count, width=w, height=h,
                   gaussians=len(model.gaussian_model.get_xyz), projection_error_px=projection_error,
-                  elapsed_seconds=time.monotonic()-start, renders=reports,
+                  elapsed_seconds=time.monotonic()-start, renders=reports, motion_mode=args.motion_mode,
+                  visibility='native GS alpha' if args.motion_mode=='se3' else 'GS alpha clipped to rotation input FOV',
                   note="One fixed GaME scene fitted to MapAnything RGB-D from the original image; RGB/alpha fed into WorldWarp diffusion. No generated frames were used to train this scene.")
     (out / "report.json").write_text(json.dumps(report, indent=2))
     print("GaME trajectory guidance complete", flush=True)

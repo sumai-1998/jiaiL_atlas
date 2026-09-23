@@ -72,9 +72,24 @@ python scripts/pipelines.py run --pipeline mapanything-game \
 
 `--capture full` 支持 A/F/G/H，保存每步 GS 模型和训练渲染、实际几何条件和生成帧等；H 没有 GS 模型。`--posthoc` 仅适用于 F/G/H，另对成片全部 321 帧推理 MapAnything，属于事后诊断，不参与已完成视频的生成。全量记录可能产生数十至上百 GiB 数据，运行前检查目标磁盘空间。
 
+## 报告与研究文档
+
+所有本项目编写的报告已集中整理到 **[docs/reports/ 总目录](docs/reports/README.md)**，包括研究方案、模型架构分析、实际流程、实验评测、历史部署记录及演示讲稿。
+
+| 阅读目的 | 文档入口 |
+|---|---|
+| 项目定位与核心机理 | [世界模型研究定位](docs/reports/research/世界模型_核心机理与研究定位报告_2026-09-22.md) |
+| 当前闭环实施方案 | [静态 GS 世界闭环](docs/reports/research/静态GS世界闭环_可行性与实施方案_2026-09-22.md) |
+| 新增项目的借鉴意义 | [WorldCrafter](docs/reports/research/WorldCrafter_架构与借鉴分析_2026-09-22.md) / [GAE](docs/reports/research/GAE_架构与借鉴分析_2026-09-22.md) |
+| 原版实际流程与评测 | [完整流程](docs/reports/technical/WORLDWARP_DETAILED_WORKFLOW.md) / [评测总结](docs/reports/technical/WORLDWARP_PIPELINE_EVALUATION_SUMMARY.md) |
+| 历次实验、视频报告、讲稿 | [完整分类索引](docs/reports/README.md) |
+
+带媒体的原始报告包保留原位置，新目录收录 Markdown 副本并链接原媒体；只下载新目录不能离线播放全部视频。上游项目文档、AI 指南、工作日记与管线操作说明保留原位置。
+
 ## 文档与验证
 
 - [工作记录：基线评测、组合实验与后续进度](sumai-work-log.md)
+- [WorldWarp 原版与三项目、F/G/H 五场景评测总结](docs/reports/technical/WORLDWARP_PIPELINE_EVALUATION_SUMMARY.md)
 - [管线、参数和自然语言调用说明](docs/PIPELINES.md)
 - [AI 工具执行规范](AGENTS.md)
 - [环境、权重和可迁移路径](docs/ENVIRONMENT.md)
@@ -82,7 +97,7 @@ python scripts/pipelines.py run --pipeline mapanything-game \
 - [代码来源与许可证范围](docs/THIRD_PARTY.md)
 - [本次整理的检查记录](docs/VALIDATION.md)
 
-代码仓库不包含 `conda_envs/`、模型权重、缓存、`WorldWarp_outputs/` 或 243 MiB 的离线报告包 `Reports/`。这些本地文件仍保留在服务器；下载代码仓库不等于下载全部实验视频。原有安装记录和研究 Markdown 作为历史材料保留，当前可执行契约以本 README、AGENTS 和管线表为准。
+代码仓库不包含 `conda_envs/`、模型权重、缓存、`WorldWarp_outputs/` 或 `Reports/` 中的本地媒体报告包。这些本地文件仍保留在服务器；下载代码仓库不等于下载全部实验视频。原有安装记录和研究 Markdown 作为历史材料保留，当前可执行契约以本 README、AGENTS 和管线表为准。
 
 CPU 调用契约测试：
 

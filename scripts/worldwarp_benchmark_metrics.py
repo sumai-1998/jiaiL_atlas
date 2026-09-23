@@ -8,7 +8,7 @@ import sys
 import time
 
 import numpy as np
-from worldwarp_benchmark import ROOT, N_FRAMES, dump
+from worldwarp_benchmark import ROOT, N_FRAMES, dump, conditioning_path
 
 
 def frechet_low_rank(x, y):
@@ -46,6 +46,8 @@ def image_metrics(args):
     inception=InceptionV3([3]).eval().cuda()
     rows=[]; feats={'gt':[],'generated':[]}
     out=args.output
+    generation_report=json.loads((out/'generation/report.json').read_text())
+    method_label=generation_report.get('method_label') or ('MapAnything + GaME + WorldWarp' if generation_report.get('method')=='map-game-ww' else 'WorldWarp')
     def tensor(images):
         return torch.from_numpy(np.stack(images)).permute(0,3,1,2).float().cuda()/255
     with imageio.get_writer(out/'comparison.mp4',fps=30,codec='libx264',quality=9,macro_block_size=1) as writer:
@@ -68,7 +70,7 @@ def image_metrics(args):
                 canvas=Image.fromarray(np.concatenate([g,p],axis=1));d=ImageDraw.Draw(canvas)
                 d.rectangle((0,0,1440,25),fill='black')
                 d.text((8,5),f'Ground truth | frame {i+1}',fill='white')
-                d.text((728,5),'WorldWarp',fill='white')
+                d.text((728,5),method_label,fill='white')
                 writer.append_data(np.array(canvas))
                 if i in (0,49,99,149,199,224):canvas.save(out/f'comparison_frame_{i+1:03d}.jpg',quality=94)
             print(f'Image metrics: {len(rows)}/{N_FRAMES}',flush=True)
@@ -108,7 +110,7 @@ def pose_metrics(args):
     finally:torch.load=original_load
     out=args.output
     gt=np.load(out/'dataset_cameras.npz')['c2w'].astype(np.float64)
-    conditioning=np.load(out/'reference_ttt3r_cameras.npz')['c2w'].astype(np.float64)
+    conditioning=np.load(conditioning_path(out))['c2w'].astype(np.float64)
     report=dict(status='running',estimator='DUSt3R_ViTLarge_BaseDecoder_512_dpt',
         checkpoint_sha256=hashlib.sha256(checkpoint.read_bytes()).hexdigest(),
         code_commit=subprocess.check_output(['git','-C',str(args.dust3r_root),'rev-parse','HEAD'],text=True).strip(),
@@ -138,7 +140,7 @@ def pose_metrics(args):
                 t_dist=float(trans[-1]),mean_R_rad=float(angle[1:].mean()),mean_t=float(trans[1:].mean()),
                 all_R_rad=angle.tolist(),all_t=trans.tolist(),normalization=scales,
                 alignment_loss=float(loss),seconds=time.monotonic()-started,
-                against_conditioning_TTT3R_DIAGNOSTIC=dict(R_dist_rad=float(diagnostic_angle[-1]),t_dist=float(diagnostic_trans[-1])))
+                against_conditioning_DIAGNOSTIC=dict(R_dist_rad=float(diagnostic_angle[-1]),t_dist=float(diagnostic_trans[-1]),camera_file=conditioning_path(out).name))
             del scene,output,pairs,images;torch.cuda.empty_cache()
         angle,trans,scales=pose_distances(conditioning[indices],gt[indices])
         row['reference_camera_error']=dict(R_dist_rad=float(angle[-1]),t_dist=float(trans[-1]),normalization=scales)
@@ -154,6 +156,9 @@ def make_report(args):
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
     out=args.output; plan=json.loads((out/'plan.json').read_text())
+    hybrid=plan.get('method')=='map-game-ww'
+    rolling=plan.get('method','').startswith('map-ww-')
+    method_label=plan.get('method_label','WorldWarp')
     observation_file=out/'qualitative_observations.json'
     observations=json.loads(observation_file.read_text()) if observation_file.is_file() else {}
     status=json.loads((out/'status.json').read_text())
@@ -172,7 +177,25 @@ def make_report(args):
             'Endpoint FID has only one sample per scene and is diagnostic.',
             'LPIPS/SSIM/DUSt3R settings are fixed local choices; pose estimates may be unreliable on degraded frames.',
             'Generation history uses decoded uint8 RGB directly instead of MP4 round trips.'],
-        scene_count=len(records),parameters=plan['parameters'],scenes=[],endpoints={})
+        scene_count=len(records),parameters=plan['parameters'],scenes=[],endpoints={},
+        method=plan.get('method','worldwarp'),pipeline=plan['pipeline'])
+    if plan['parameters'].get('strength', .8) != .8:
+        summary['limitations'].append('Strength is tuned for this development scene; not the paper .8 configuration.')
+    if plan['parameters'].get('geometry_source', 'rolling') == 'first-image':
+        summary['limitations'].append('Geometry is rebuilt from the real first image only; generated history is used for video context/text, not geometry. This is a diagnostic variant, not original rolling WorldWarp.')
+    if hybrid:
+        summary['limitations'] += [
+            'Local three-project combination, not a method evaluated in the WorldWarp paper.',
+            'Single-image fixed GaME geometry cannot acquire newly exposed surfaces.',
+            'Global depth-unit calibration uses independent first-image-only TTT3R inference.',
+            'Qwen captions follow each method generated history and can differ after the first chunk.']
+    if rolling:
+        summary['limitations'] += [
+            'F/G/H adapted to full SE3; not the historical classroom configuration or a paper method.',
+            'One first-image-only TTT3R/MapAnything scalar is applied to every geometry window; residual scale drift can remain.',
+            'Generated historical views use requested cameras, which need not equal actual generated motion.',
+            'Qwen captions follow own generated history and can differ between methods.',
+            'Compact retention removes bulky geometry; lossless scoring images may be pruned only after verification.']
     for r in records:
         if r['image']['status']!='complete' or r['pose']['status']!='complete':raise RuntimeError('Incomplete metrics')
         summary['scenes'].append(dict(scene_id=r['scene_id'],folder=r['folder'],
@@ -184,7 +207,9 @@ def make_report(args):
         key=str(endpoint)
         mean={m:float(np.mean([r['image']['endpoints'][key][m] for r in records])) for m in ('psnr_db','ssim','lpips')}
         mean.update({m:float(np.mean([r['pose']['endpoints'][key]['generated'][m] for r in records])) for m in ('R_dist_rad','R_dist_deg','t_dist')})
-        mean['FID_endpoint_diagnostic']=frechet_low_rank(np.stack([f['gt'][endpoint-1] for f in features]),np.stack([f['generated'][endpoint-1] for f in features]))
+        mean['FID_endpoint_diagnostic']=(frechet_low_rank(np.stack([f['gt'][endpoint-1] for f in features]),np.stack([f['generated'][endpoint-1] for f in features])) if len(records)>1 else None)
+        if len(records)==1:
+            mean['FID_unavailable_reason']='One image per distribution at this endpoint; covariance/FID undefined.'
         mean['FID_sample_count']=len(records)
         summary['endpoints'][key]=mean
     summary['FID_all_novel_frames_diagnostic']=frechet_low_rank(np.concatenate([f['gt'][1:] for f in features]),np.concatenate([f['generated'][1:] for f in features]))
@@ -225,7 +250,15 @@ def make_report(args):
             '在生成前按本地清单 scene ID 排序固定选出，没有依据结果筛选。')))
     import shlex
     manifest_arg=shlex.quote(str(out/'selected_manifest.json'))
-    lines=[f'# WorldWarp：DL3DV 本地 {count} 场景基准', '',
+    method_args=(' --method '+plan['method']+' --baseline-runs '+' '.join(shlex.quote(p) for p in plan['baseline_runs'])) if hybrid or rolling else ''
+    if not hybrid and not rolling:
+        method_args += ' --camera-intrinsics '+plan['parameters'].get('camera_intrinsics_policy','legacy-per-frame')
+        method_args += ' --camera-source '+plan['parameters'].get('camera_source','ttt3r')
+        method_args += ' --strength '+str(plan['parameters'].get('strength',.8))
+        method_args += ' --geometry-source '+plan['parameters'].get('geometry_source','rolling')
+        if plan['parameters'].get('audit_guidance'):
+            method_args += ' --audit-guidance'
+    lines=[f'# {method_label}：DL3DV 本地 {count} 场景基准', '',
         f'这是一次按论文已公开方法建立的本地小样本基准，**不是论文官方结果复现**。本次 {count} 个场景：'+plan.get('selection_description','在生成前按本地清单 scene ID 排序固定选出，没有依据结果筛选。'), '',
         '[所有场景同时对比视频](all_scenes_comparison.mp4)：每行一个场景，左侧是真实帧，右侧是生成帧。225 帧、30 fps、播放时长 7.5 秒；30 fps 是播放速度，不代表原始采集时间。', '',
         '## 第 50 / 200 帧指标', '',
@@ -233,7 +266,8 @@ def make_report(args):
         f'| 帧 | PSNR↑ (dB) | SSIM↑ | LPIPS↓ | R_dist↓ (rad) | t_dist↓ | FID↓（仅 {count} 张，诊断） |',
         '|---|---:|---:|---:|---:|---:|---:|']
     for endpoint,s in summary['endpoints'].items():
-        lines.append(f'| {endpoint} | {s["psnr_db"]:.3f} | {s["ssim"]:.4f} | {s["lpips"]:.4f} | {s["R_dist_rad"]:.4f} | {s["t_dist"]:.4f} | {s["FID_endpoint_diagnostic"]:.3f} |')
+        fid_display=f'{s["FID_endpoint_diagnostic"]:.3f}' if s['FID_endpoint_diagnostic'] is not None else 'N/A（单张）'
+        lines.append(f'| {endpoint} | {s["psnr_db"]:.3f} | {s["ssim"]:.4f} | {s["lpips"]:.4f} | {s["R_dist_rad"]:.4f} | {s["t_dist"]:.4f} | {fid_display} |')
     lines += ['', f'**FID 限制：**每个端点只有 {count} 张图，协方差秩至多为 {count-1}，数值不稳定，不能用于对照论文 FID 排名。全部新生成帧合并的 FID 也只是诊断，帧之间高度相关。',
         f'全部 {summary["FID_all_novel_samples"]} 张新生成帧的诊断 FID：{summary["FID_all_novel_frames_diagnostic"]:.3f}。', '',
         '![逐帧指标](metric_curves.png)', '', '## 本地轨迹的运动幅度', '',
@@ -259,8 +293,10 @@ def make_report(args):
     lines += ['## 实际流程与参数', '',
         '1. 从现有 pixelSplat 格式 DL3DV 分片读取相机和图片，按时间戳取前 225 帧。原图 480×270，经 Lanczos4 放大并中心裁剪到 720×480；内参应用同一像素变换，外参由 OpenCV w2c 转为 c2w，统一到第一帧坐标系。',
         '2. 遵循论文补充 §7，用 TTT3R 处理真实参考序列，提取生成所需的参考相机与内参。它产生的真实序列深度仅保存作诊断，**不输入生成的几何拟合或扩散模型**。这属于使用参考视频估计相机的评测设置，不是只给一张图且完全没有轨迹信息的设置。',
-        '3. 生成器的实际图像输入只有第一张真实图。后续 TTT3R、GS 与 Qwen caption 只接收已生成的历史。TTT3R 读取上一段 49 帧；原生 warper 用末尾 5 个连续上下文视图初始化和拟合 GS，首段只用第 1 帧。这不是均匀抽取 5 个历史关键帧。使用原生 WorldWarp GS 与异步扩散，不接入 MapAnything 或 GaME。',
-        '4. 5 段，每段 49 帧；首段上下文 1 帧，后续各重叠 5 个生成历史帧。拼接去重得到 49+4×44=225 帧。GS 500 步，位置学习率 1.6e-3；strength 0.8，采样 50 步，CFG 5，seed 32。Qwen 根据起始图及生成历史自动写 caption。',
+        ('3. 复用原基线的真实 PNG 和参考相机文件，逐文件核验哈希。MapAnything 仅估计输入首图的深度，使用首图单独 TTT3R 推理所得深度的像素比中位数校准一个全局尺度；没有读取参考序列深度或其他真实帧来建模。GaME 从首图 RGB-D 拟合一次固定静态场景，用完整旋转和平移轨迹渲染 RGB/alpha。没有生成历史回写几何；SE3 渲染使用原生 GS alpha，不使用纯旋转视野单应性裁剪。'
+         if hybrid else '3. 生成器的实际图像输入只有第一张真实图。后续 TTT3R、GS 与 Qwen caption 只接收已生成的历史。TTT3R 读取上一段 49 帧；原生 warper 用末尾 5 个连续上下文视图初始化和拟合 GS，首段只用第 1 帧。这不是均匀抽取 5 个历史关键帧。使用原生 WorldWarp GS 与异步扩散，不接入 MapAnything 或 GaME。'),
+        ('4. 5 段，每段 49 帧；首段上下文 1，后续重叠 5 帧，去重后 225 帧。GaME 在 720×480 拟合 500 步，另有原生 50 步预热，GaME seed 0。扩散 strength 0.8、采样 50 步、CFG 5、seed 32 与原基线相同。Qwen 按相同策略描述当前生成历史，因此后续 caption 不保证逐字相同。这是历史三项目架构的基准适配版，不是 classroom B 的 .6/ctx1 原配置复跑。'
+         if hybrid else '4. 5 段，每段 49 帧；首段上下文 1 帧，后续各重叠 5 个生成历史帧。拼接去重得到 49+4×44=225 帧。GS 500 步，位置学习率 1.6e-3；strength 0.8，采样 50 步，CFG 5，seed 32。Qwen 根据起始图及生成历史自动写 caption。'),
         '5. 编码前保存生成 PNG，与相同索引、相同裁剪的真实 PNG 计算全图指标；输入帧不进入平均新视角分数。视频编码不参与评分。', '',
         '## 指标定义和不能直接对照论文的部分', '',
         '- PSNR：RGB [0,1] 均方误差转 dB；SSIM：11×11 高斯窗、sigma=1.5、总体协方差、RGB 通道平均。LPIPS：AlexNet、v0.1。论文未公开具体 SSIM 实现或 LPIPS 主干，因此此处固定定义用于后续本地比较。',
@@ -270,19 +306,33 @@ def make_report(args):
         '- 另对真实视频使用同一 DUSt3R 过程，展示估计器自身的误差参照；这不是可直接减掉的噪声下界。pose_metrics.json 也保存 TTT3R 参考相机相对数据集相机的误差，以及生成相机相对 TTT3R 控制轨迹的诊断值。',
         '- 严重模糊或结构崩坏的生成画面也可能使 DUSt3R 位姿不可靠。给出有限数值仅表示重建过程完成，不等于相机一定恢复准确；真实视频上的估计误差也不能作为这些退化画面的误差上界。位姿分数需要结合图像指标和实际画面一起阅读。',
         '- 未公开的论文场景划分、采样间隔、相机评测代码不能复原。本次只代表这里固定的场景、现有低分辨率图片、前 225 帧顺序和本地代码。原始片段的实际采集帧率未从分片中确认，不能把此处 50 帧运动跨度假定为论文的同一跨度。', '',
-        '- 本地适配器把上一段解码后的 uint8 RGB 直接作为下一段图像历史，不经过 MP4 再解码；caption 仍读取分段视频。这样避免把视频编码损失加入几何历史与评分，但与上游演示脚本的视频文件往返存在差异。原生 GS 与扩散算法保持上游实现。', '',
+        '- 本地适配器把上一段解码后的 uint8 RGB 直接作为下一段图像历史，不经过 MP4 再解码；caption 仍读取分段视频。这与已有原版基线相同，扩散仍使用 WorldWarp 原生实现。', '',
         '## 文件与复用', '',
         '- metrics_summary.json：可供 AI 工具读取的总表；每个场景 image_metrics.csv / image_metrics.json / pose_metrics.json：明细。',
         '- gt/、generated/：225 帧无损图片；dataset_cameras.npz、reference_ttt3r_cameras.npz：数据集与实际控制相机。',
-        '- reference_ttt3r_depth_DIAGNOSTIC_ONLY.npy：参考视频深度，仅作诊断；generation/artifacts/：每段最终 GS、caption、扩散调度图、分段视频。没有逐 GS 迭代模型或逐去噪 latent。',
+        ('- mapanything/：首图原始几何；geometry/：首图尺度诊断与转换后 RGB-D；scene/：GaME 模型；guidance/：225 帧 RGB/alpha 条件；generation/artifacts/：caption、调度图及分段视频。没有逐 GS 迭代模型或逐去噪 latent，未复制真实参考序列深度。'
+         if hybrid else '- reference_ttt3r_depth_DIAGNOSTIC_ONLY.npy：参考视频深度，仅作诊断；generation/artifacts/：每段最终 GS、caption、扩散调度图、分段视频。没有逐 GS 迭代模型或逐去噪 latent。'),
         '- dust3r_*.npz：真实与生成视频重建的相机；inception_features.npz：FID 特征。',
         '- plan.json、preflight.json、status.json、logs/：执行参数、状态与日志。下载整个本目录即可离线查看文档及所有引用的图片和视频。', '',
         '复跑入口（输出目录必须不存在，先检查 GPU）：', '', '```bash',
-        f'python scripts/pipelines.py benchmark plan --manifest {manifest_arg} --count {count} --output runs/NEW_RUN --gpu GPU_ID',
-        f'python scripts/pipelines.py benchmark doctor --manifest {manifest_arg} --count {count} --output runs/NEW_RUN --gpu GPU_ID',
-        f'python scripts/pipelines.py benchmark run --manifest {manifest_arg} --count {count} --output runs/NEW_RUN --gpu GPU_ID',
+        f'python scripts/pipelines.py benchmark plan --manifest {manifest_arg} --count {count} --output runs/NEW_RUN --gpu GPU_ID{method_args}',
+        f'python scripts/pipelines.py benchmark doctor --manifest {manifest_arg} --count {count} --output runs/NEW_RUN --gpu GPU_ID{method_args}',
+        f'python scripts/pipelines.py benchmark run --manifest {manifest_arg} --count {count} --output runs/NEW_RUN --gpu GPU_ID{method_args}',
         '```', '',
         '方法依据：[WorldWarp 论文 §5 与补充 §7](https://arxiv.org/html/2512.19678v1)、[官方代码](https://github.com/HyoKong/WorldWarp)、[DUSt3R 官方代码](https://github.com/naver/dust3r)、[LPIPS](https://github.com/richzhang/PerceptualSimilarity)、[pytorch-fid](https://github.com/mseitzer/pytorch-fid)。']
+    if rolling:
+        for i,line in enumerate(lines):
+            if line.startswith('3. '):
+                lines[i]='3. 配对复用原版输入图和参考相机。首段用首图 MapAnything；后续从本方法上一段 49 帧中均匀取局部 0/12/24/36/48 估计几何。G/H 额外保留原图，去掉全局 0 的重复，原图权重 2；F 不加原图。只用首图独立 TTT3R 深度校准一个全局标量，所有窗口沿用；没有使用参考序列深度或后续真实图建模，生成器不加载 TTT3R 模型。'
+            elif line.startswith('4. '):
+                lines[i]='4. F/G 每段重新拟合 WorldWarp 原生 GS 500 步，SE3 可见性采用渲染 alpha 与来源深度一致性（相对阈值 .1）。H 不做 GS，用逐来源 z-buffer、双线性投影和加权颜色融合。几何关键帧与连续末尾 5 帧视频上下文不同。5 段 49 帧、重叠 5，共 225 帧；strength .8、50 步采样、CFG 5、seed 32；Qwen 按本方法生成历史自动描述。没有 GaME 或持久全局地图。'
+            elif line.startswith('- reference_ttt3r_depth_DIAGNOSTIC_ONLY.npy'):
+                lines[i]='- generation/geometry/：逐段 MapAnything / 渲染诊断及少量条件预览。大体积 RGB-D、GS checkpoint、完整渲染数组已在成功渲染后清理；首图尺度 JSON、相机和调用记录保留。没有逐 GS 迭代模型或逐去噪 latent。'
+    if plan['parameters'].get('camera_source')=='dataset-calibrated':
+        lines[1:1]=['', '**这是标定相机诊断，不是论文 TTT3R 控制相机协议。** 实际请求 K/旋转来自数据集；平移只按数据集与参考 TTT3R 轨迹拟合一个正标量以统一深度单位。未使用参考深度生成。实际相机为 conditioning_cameras.npz；reference_ttt3r_cameras.npz 仍保留预测轨迹作对照。', '']
+        for i,line in enumerate(lines):
+            if line.startswith('2. '):
+                lines[i]='2. 用参考视频 TTT3R 位姿估计平移单位；实际采用数据集标定内参和旋转，数据集平移乘正的最小二乘尺度。仅标定相机与参考估计的平移参与尺度拟合，参考深度不用于生成。'
     (out/'README.md').write_text('\n'.join(lines)+'\n')
     import markdown
     import re
